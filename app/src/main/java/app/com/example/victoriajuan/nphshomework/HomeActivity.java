@@ -8,6 +8,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -24,18 +27,26 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
             }
         });
-    }
+        Button button = (Button)findViewById(R.id.login);
 
-    @Override
+        button.setOnClickListener(
+                new Button.OnClickListener() {
+                    public void onClick(View v) {
+                        TextView myTextView =
+                                (TextView) findViewById(R.id.myTextView);
+                        myTextView.setText("Button clicked");
+                    }
+                });
+    }
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_home, menu);
         return true;
     }
 
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -47,6 +58,8 @@ public class HomeActivity extends AppCompatActivity {
             return true;
         }
 
-        return super.onOptionsItemSelected(item);
+        return onOptionsItemSelected(item);
     }
+
+
 }
