@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "app.com.example.victoriajuan.nphshomework"
-        minSdkVersion 10
+        minSdkVersion 16
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
