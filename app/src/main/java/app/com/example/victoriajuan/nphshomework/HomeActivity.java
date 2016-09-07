@@ -30,12 +30,20 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
         Button button = (Button)findViewById(R.id.login);
-
         button.setOnClickListener(
                 new Button.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         startActivity(new Intent(HomeActivity.this, LoginActivity.class));
+                    }
+                });
+
+        Button button2 = (Button)findViewById(R.id.classes);
+        button2.setOnClickListener(
+                new Button.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(HomeActivity.this, ClassActivity.class));
                     }
                 });
     }
