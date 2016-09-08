@@ -17,7 +17,13 @@
         completions."
     </string>
     <string name="title_activity_class">ClassActivity</string>
-    <string name="large_text">
-        "Fake Data"
-    </string>
+
+    <string name="class1">English</string>
+    <string name="class2">Math</string>
+    <string name="class3">History</string>
+    <string name="class4">Science</string>
+    <string name="class5">Elective</string>
+    <string name="class6">Elective2</string>
+    <string name="title_activity_detail">DetailActivity</string>
+
 </resources>
