@@ -25,5 +25,6 @@
     <string name="class5">Elective</string>
     <string name="class6">Elective2</string>
     <string name="title_activity_detail">DetailActivity</string>
+    <string name="details">Details of Homework</string>
 
 </resources>
