@@ -1,5 +1,6 @@
 package app.com.example.victoriajuan.nphshomework;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,11 +49,22 @@ public class ClassActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_class);
-        if(savedInstanceState==null)
-            getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, new PlaceholderFragment())
-                .commit();
+        if(SaveSharedPreference.getUserName(ClassActivity.this).length() == 0)
+        {
+            startActivity(new Intent(ClassActivity.this, LoginActivity.class));
+        }
+        else
+        {
+
+            setContentView(R.layout.activity_class);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            if(savedInstanceState==null)
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.container, new PlaceholderFragment())
+                        .commit();
+
+        }
     }
 
     @Override
@@ -65,6 +78,12 @@ public class ClassActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
+        }
+
+        if (id == R.id.logout) {
+            SaveSharedPreference.setUserName(ClassActivity.this, "");
+            startActivity(new Intent(ClassActivity.this, LoginActivity.class));
+            //finish();
         }
         return onOptionsItemSelected(item);
     }
