@@ -32,6 +32,7 @@ public class ClassActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         if(SaveSharedPreference.getUserName(ClassActivity.this).length() == 0)
         {
+            finish();
             startActivity(new Intent(ClassActivity.this, LoginActivity.class));
         }
         else
@@ -63,7 +64,12 @@ public class ClassActivity extends AppCompatActivity {
 
         if (id == R.id.logout) {
             SaveSharedPreference.setUserName(ClassActivity.this, "");
-            startActivity(new Intent(ClassActivity.this, LoginActivity.class));
+            Intent launchNextActivity;
+            launchNextActivity = new Intent(ClassActivity.this, LoginActivity.class);
+            launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(launchNextActivity);
             return true;
         }
 
