@@ -73,13 +73,7 @@ public class ClassActivity extends AppCompatActivity {
             return true;
         }
 
-        boolean bool = onOptionsItemSelected(item);
-        if (bool)
-            return bool;
-        else {
-            finish();
-            return true;
-        }
+        return onOptionsItemSelected(item);
     }
 
     public static class PlaceholderFragment extends Fragment{
