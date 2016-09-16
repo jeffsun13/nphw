@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,11 +6,12 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="app.com.example.victoriajuan.nphshomework.CalendarActivity">
+    tools:context="app.com.example.victoriajuan.nphshomework.ClassFragment"
+    tools:showIn="@layout/activity_class">
 
-    <CalendarView
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/calendarView">
-    </CalendarView>
-</LinearLayout>
+        android:id="@+id/listview_classes" />
+
+</FrameLayout>

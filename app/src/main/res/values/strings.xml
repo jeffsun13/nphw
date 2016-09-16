@@ -4,6 +4,7 @@
     <string name="logout">Log Out</string>
     <string name="title_activity_login">Sign in</string>
     <string name="welcome_screen">Welcome to the NPHS Homework App</string>
+    <string name="action_refresh">Refresh</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
