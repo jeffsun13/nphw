@@ -2,6 +2,8 @@ package app.com.example.victoriajuan.nphshomework;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -30,22 +32,27 @@ public class ClassActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(SaveSharedPreference.getUserName(ClassActivity.this).length() == 0)
-        {
+        if (SaveSharedPreference.getUserName(ClassActivity.this).length() == 0) {
             finish();
             startActivity(new Intent(ClassActivity.this, LoginActivity.class));
-        }
-        else
-        {
+        } else {
 
             setContentView(R.layout.activity_class);
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
-            if(savedInstanceState==null)
+            if (savedInstanceState == null)
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.container, new PlaceholderFragment())
                         .commit();
 
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(ClassActivity.this, CalendarActivity.class));
+                }
+
+            });
         }
     }
 

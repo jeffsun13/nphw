@@ -27,5 +27,9 @@
     <string name="class6">Elective2</string>
     <string name="title_activity_detail">DetailActivity</string>
     <string name="details">Details of Homework</string>
+    <string name="title_activity_calendar">CalendarActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
