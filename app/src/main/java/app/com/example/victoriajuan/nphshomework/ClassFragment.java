@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,6 +25,24 @@ public class ClassFragment extends Fragment {
 
     private ArrayAdapter<String> mForecastAdapter;
 
+    private String[] day1= {
+            "English: Read pages",
+            "Math: Do Problems",
+            "History: Watch Video",
+            "Science: Do Lab",
+            "Elective: Take Pictures",
+            "Elective2: None"
+    };
+
+    private String[] day2= {
+            "English: Take Notes",
+            "Math: Study for Test",
+            "History: None ",
+            "Science: Write Report",
+            "Elective: None",
+            "Elective2: Create Presentation"
+    };
+
     public ClassFragment() {
         // Required empty public constructor
     }
@@ -40,13 +59,25 @@ public class ClassFragment extends Fragment {
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        if(SaveSharedPreference.getDay(getContext()) == 17) {
+            updateClasses(day2);
+        }
+        else{
+            updateClasses(day1);
+        }
+    }
+
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
         }
 
-        if (id == R.id.logout) {
+         if (id == R.id.logout) {
             SaveSharedPreference.setUserName(getContext(), "");
             Intent launchNextActivity;
             launchNextActivity = new Intent(getContext(), LoginActivity.class);
@@ -59,29 +90,23 @@ public class ClassFragment extends Fragment {
 
         return onOptionsItemSelected(item);
     }
+
+    public void updateClasses(String[] classData){
+        mForecastAdapter.clear();
+        for(String homework:classData){
+            mForecastAdapter.add(homework);
+        }
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        String[] data= {
-                "English: Read pages",
-                "Math: Do Problems",
-                "History: Watch Video",
-                "Science: Do Lab",
-                "Elective: Take Pictures",
-                "Elective2: Nothing"
-        };
 
-        String[] data2= {
-                "English: Homework",
-                "Math: Homework",
-                "History: Homework",
-                "Science: Homework",
-                "Elective: Homework",
-                "Elective2: Homework"
-        };
+        List<String> weekHomework;
 
-        List<String> weekHomework=new ArrayList<String>(Arrays.asList(data));
+        weekHomework = new ArrayList<String>(Arrays.asList(day1));
 
         mForecastAdapter = new ArrayAdapter<String>(
                 getActivity(),
@@ -89,7 +114,7 @@ public class ClassFragment extends Fragment {
                 R.id.list_item_forecast_textview,
                 weekHomework);
 
-        View rootView=inflater.inflate(R.layout.content_class, container, false);
+        View rootView=inflater.inflate(R.layout.fragment_class, container, false);
 
         ListView listView = (ListView) rootView.findViewById(R.id.listview_classes);
         listView.setAdapter(mForecastAdapter);
@@ -106,4 +131,6 @@ public class ClassFragment extends Fragment {
 
         return rootView;
     }
+
+
 }

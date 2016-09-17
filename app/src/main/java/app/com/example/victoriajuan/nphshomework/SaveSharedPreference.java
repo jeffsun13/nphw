@@ -7,7 +7,7 @@ import android.view.View;
 
 public class SaveSharedPreference {
     static final String PREF_USER_NAME = "username";
-    static final String DAY = "0";
+    static final String DAY = "balls";
 
     static SharedPreferences getSharedPreferences(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -16,7 +16,7 @@ public class SaveSharedPreference {
     public static void setUserName(Context ctx, String userName) {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.putString(PREF_USER_NAME, userName);
-        editor.commit();
+        editor.apply();
     }
 
     public static String getUserName(Context ctx) {
@@ -26,11 +26,11 @@ public class SaveSharedPreference {
     public static void setDay(Context ctx, int day) {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.putInt(DAY, day);
-        editor.commit();
+        editor.apply();
     }
 
-    public static String getDay(Context ctx) {
-        return getSharedPreferences(ctx).getString(DAY, "");
+    public static int getDay(Context ctx) {
+        return getSharedPreferences(ctx).getInt(DAY, 0);
     }
 
 }
