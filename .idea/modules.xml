@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/NPHS.iml" filepath="$PROJECT_DIR$/NPHS.iml" />
-      <module fileurl="file://$PROJECT_DIR$/NPHSHomework.iml" filepath="$PROJECT_DIR$/NPHSHomework.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Bars.iml" filepath="$PROJECT_DIR$/Bars.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

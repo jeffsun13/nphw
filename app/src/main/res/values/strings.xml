@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">NPHSHomework</string>
+    <string name="app_name">NPHS Homework</string>
     <string name="action_settings">Settings</string>
     <string name="logout">Log Out</string>
     <string name="title_activity_login">Sign in</string>
-    <string name="welcome_screen">Welcome to the NPHS Homework App</string>
+    <string name="welcome_screen">Welcome to the NPHS Homework App!</string>
     <string name="action_refresh">Refresh</string>
 
     <!-- Strings related to login -->
@@ -20,6 +20,7 @@
     </string>
     <string name="title_activity_class">ClassActivity</string>
 
+    <!-- Strings related to classes -->
     <string name="class1">English</string>
     <string name="class2">Math</string>
     <string name="class3">History</string>
@@ -30,7 +31,12 @@
     <string name="details">Details of Homework</string>
     <string name="title_activity_calendar">CalendarActivity</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Strings related to settings -->
+    <string name="pref_night_notif">Night Reminders</string>
+    <string name="pref_morn_notif">Morning Reminders</string>
+    <string name="pref_notif">REMINDERS</string>
+    <string name="pref_account">ACCOUNT</string>
+    <string name="pref_morn_text">Send homework reminders at 6 AM.</string>
+    <string name="pref_night_text">Send homework reminders at 6 PM.</string>
 
 </resources>
