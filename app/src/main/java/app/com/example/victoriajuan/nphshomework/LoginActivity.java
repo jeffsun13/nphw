@@ -113,12 +113,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
-        Calendar calendar = Calendar.getInstance();
-        int day2 = calendar.get(Calendar.DAY_OF_MONTH);
-        int month2 = calendar.get(Calendar.MONTH);
-        int year2 = calendar.get(Calendar.YEAR);
-        SaveSharedPreference.setDate(LoginActivity.this , day2 ,month2,year2);
-
     }
 
 

@@ -26,23 +26,6 @@ public class SaveSharedPreference {
         return getSharedPreferences(ctx).getString(PREF_USER_NAME, "");
     }
 
-    public static void setDate(Context ctx, int day, int month, int year) {
-        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
-        editor.putInt(DAY, day);
-        editor.putInt(MONTH, month);
-        editor.putInt(YEAR, year);
-        editor.apply();
-    }
-
-    public static int getDay(Context ctx) {
-        return getSharedPreferences(ctx).getInt(DAY, 0);
-    }
-    public static int getMonth(Context ctx) {
-        return getSharedPreferences(ctx).getInt(MONTH, 0);
-    }
-    public static int getYear(Context ctx) {
-        return getSharedPreferences(ctx).getInt(YEAR, 0);
-    }
 
     public static void setNotifications(Context ctx, String str, String val) {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();

@@ -58,7 +58,7 @@ public class ClassFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        if(SaveSharedPreference.getDay(getContext()) == 17) {
+        if(GlobalVariables.getDay() == 17) {
             updateClasses(day2);
         }
         else{

@@ -9,6 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.Calendar;
+
 
 /**
  * A placeholder fragment containing a simple view.
@@ -39,6 +41,12 @@ public class ClassActivity extends AppCompatActivity {
 
             });
         }
+
+        Calendar calendar = Calendar.getInstance();
+        int day2 = calendar.get(Calendar.DAY_OF_MONTH);
+        int month2 = calendar.get(Calendar.MONTH);
+        int year2 = calendar.get(Calendar.YEAR);
+        GlobalVariables.setDate(day2 ,month2,year2);
     }
 
     @Override
