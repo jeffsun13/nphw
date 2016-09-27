@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -20,24 +19,45 @@ import java.util.List;
 
 public class ClassFragment extends Fragment {
 
-    private ArrayAdapter<String> mForecastAdapter;
+    private CustomAdapter adapter;
 
-    private String[] day1= {
-            "English: Read pages",
-            "Math: Do Problems",
-            "History: Watch Video",
-            "Science: Do Lab",
-            "Elective: Take Pictures",
-            "Elective2: None"
+
+    private String[] day1 = {
+            "Read pages",
+            "Do Problems",
+            "Watch Video",
+            "Do Lab",
+            "Take Pictures",
+            "None"
     };
 
-    private String[] day2= {
-            "English: Take Notes",
-            "Math: Study for Test",
-            "History: None ",
-            "Science: Write Report",
-            "Elective: None",
-            "Elective2: Create Presentation"
+    private String[] day2 = {
+            "Take Notes",
+            "Study for Test",
+            "None ",
+            "Write Report",
+            "None",
+            "Create Presentation"
+    };
+
+    private String[] titles = {
+            "English",
+            "Math",
+            "History",
+            "Science",
+            "Elective",
+            "Elective2"
+    };
+
+    Integer[] imgid={
+            R.drawable.default_class_icon,
+            R.drawable.default_class_icon,
+            R.drawable.default_class_icon,
+            R.drawable.default_class_icon,
+            R.drawable.default_class_icon,
+            R.drawable.default_class_icon,
+            R.drawable.default_class_icon,
+            R.drawable.default_class_icon,
     };
 
     public ClassFragment() {
@@ -61,7 +81,7 @@ public class ClassFragment extends Fragment {
         if(GlobalVariables.getDay() == 17) {
             updateClasses(day2);
         }
-        else{
+        else {
             updateClasses(day1);
         }
     }
@@ -90,9 +110,9 @@ public class ClassFragment extends Fragment {
     }
 
     public void updateClasses(String[] classData){
-        mForecastAdapter.clear();
+        adapter.clear();
         for(String homework:classData){
-            mForecastAdapter.add(homework);
+            adapter.add(homework);
         }
 
     }
@@ -102,25 +122,26 @@ public class ClassFragment extends Fragment {
                              Bundle savedInstanceState) {
 
 
+        List<String> classTitles;
         List<String> weekHomework;
+        List<Integer> hwIcons;
 
+        classTitles = new ArrayList<String>(Arrays.asList(titles));
         weekHomework = new ArrayList<String>(Arrays.asList(day1));
+        hwIcons = new ArrayList<Integer>(Arrays.asList(imgid));
 
-        mForecastAdapter = new ArrayAdapter<String>(
-                getActivity(),
-                R.layout.list_item_forecast,
-                R.id.list_item_forecast_textview,
-                weekHomework);
 
         View rootView=inflater.inflate(R.layout.fragment_class, container, false);
 
+
+        adapter = new CustomAdapter(getActivity(), classTitles, weekHomework, hwIcons);
         ListView listView = (ListView) rootView.findViewById(R.id.listview_classes);
-        listView.setAdapter(mForecastAdapter);
+        listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String forecast = mForecastAdapter.getItem(i);
+                String forecast = adapter.getItem(i);
                 Intent intent = new Intent(getActivity(), DetailActivity.class)
                         .putExtra(Intent.EXTRA_TEXT, forecast);
                 startActivity(intent);

@@ -56,6 +56,15 @@ public class ClassActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onResume()
+    {
+        super.onResume();
+        setTitle(Integer.toString(GlobalVariables.getMonth())+"/"+
+                Integer.toString(GlobalVariables.getDay())+"/"+
+                Integer.toString(GlobalVariables.getYear()));
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
