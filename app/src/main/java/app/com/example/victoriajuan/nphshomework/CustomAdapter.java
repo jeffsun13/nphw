@@ -44,6 +44,12 @@ public class CustomAdapter extends ArrayAdapter<String> {
 
     }
 
+
+    public void clear() {
+        itemTitle.clear();
+        itemDescr.clear();
+    }
+
     public void add(String title, String descr) {
         itemTitle.add(title);
         itemDescr.add(descr);

@@ -59,7 +59,7 @@ public class ClassActivity extends AppCompatActivity {
     public void onResume()
     {
         super.onResume();
-        setTitle(Integer.toString(GlobalVariables.getMonth())+"/"+
+        setTitle(Integer.toString(GlobalVariables.getMonth()+1)+"/"+
                 Integer.toString(GlobalVariables.getDay())+"/"+
                 Integer.toString(GlobalVariables.getYear()));
     }

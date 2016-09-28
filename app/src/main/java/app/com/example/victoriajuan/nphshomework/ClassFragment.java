@@ -77,11 +77,12 @@ public class ClassFragment extends Fragment {
     public void onResume(){
         super.onResume();
         if(GlobalVariables.getDay() == 17) {
-            updateClasses(day2, titles);
+            updateClasses(day1,titles);
         }
         else {
-            updateClasses(day1, titles);
+            updateClasses(day2,titles);
         }
+        adapter.notifyDataSetChanged();
     }
 
 
