@@ -50,14 +50,12 @@ public class ClassFragment extends Fragment {
     };
 
     private Integer[] imgid={
-            R.drawable.default_class_icon,
-            R.drawable.default_class_icon,
-            R.drawable.default_class_icon,
-            R.drawable.default_class_icon,
-            R.drawable.default_class_icon,
-            R.drawable.default_class_icon,
-            R.drawable.default_class_icon,
-            R.drawable.default_class_icon,
+            R.mipmap.paper,
+            R.mipmap.compass,
+            R.mipmap.pencil,
+            R.mipmap.atom,
+            R.mipmap.glasses,
+            R.mipmap.ruler
     };
 
     public ClassFragment() {
