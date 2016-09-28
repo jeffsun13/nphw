@@ -23,21 +23,21 @@ public class ClassFragment extends Fragment {
 
 
     private String[] day1 = {
-            "Read pages",
-            "Do Problems",
-            "Watch Video",
-            "Do Lab",
-            "Take Pictures",
-            "None"
+            "Read pages. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+            "Do Problems. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+            "Watch Video. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+            "Do Lab. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+            "Take Pictures. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+            "None. Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
     };
 
     private String[] day2 = {
-            "Take Notes",
-            "Study for Test",
-            "None ",
-            "Write Report",
-            "None",
-            "Create Presentation"
+            "Take Notes. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+            "Study for Test. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+            "None. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+            "Write Report. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+            "None. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+            "Create Presentation. Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
     };
 
     private String[] titles = {
@@ -49,7 +49,7 @@ public class ClassFragment extends Fragment {
             "Elective2"
     };
 
-    Integer[] imgid={
+    private Integer[] imgid={
             R.drawable.default_class_icon,
             R.drawable.default_class_icon,
             R.drawable.default_class_icon,
@@ -79,10 +79,10 @@ public class ClassFragment extends Fragment {
     public void onResume(){
         super.onResume();
         if(GlobalVariables.getDay() == 17) {
-            updateClasses(day2);
+            updateClasses(day2, titles);
         }
         else {
-            updateClasses(day1);
+            updateClasses(day1, titles);
         }
     }
 
@@ -109,10 +109,10 @@ public class ClassFragment extends Fragment {
         return onOptionsItemSelected(item);
     }
 
-    public void updateClasses(String[] classData){
+    public void updateClasses(String[] classData, String[] titles){
         adapter.clear();
-        for(String homework:classData){
-            adapter.add(homework);
+        for(int rep = 0; rep < titles.length; rep++){
+            adapter.add(titles[rep], classData[rep]);
         }
 
     }
