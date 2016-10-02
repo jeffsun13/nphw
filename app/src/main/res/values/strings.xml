@@ -27,7 +27,7 @@
     <string name="class4">Science</string>
     <string name="class5">Elective</string>
     <string name="class6">Elective2</string>
-    <string name="title_activity_detail">DetailActivity</string>
+    <string name="title_activity_detail">Homework Details</string>
     <string name="details">Details of Homework</string>
     <string name="title_activity_calendar">CalendarActivity</string>
 
@@ -38,5 +38,8 @@
     <string name="pref_account">ACCOUNT</string>
     <string name="pref_morn_text">Send homework reminders at 6 AM.</string>
     <string name="pref_night_text">Send homework reminders at 6 PM.</string>
-
+    <string name="pref_change_pass_title">Change Password</string>
+    <string name="pref_change_pass_text">Set a new password for your account.</string>
+    <string name="pref_change_class_title">Change Classes</string>
+    <string name="pref_change_class_text">Choose different classes on your schedule.</string>
 </resources>

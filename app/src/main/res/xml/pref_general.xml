@@ -21,6 +21,16 @@
         android:title="@string/pref_account"
         android:key="pref_acc_settings">
 
+        <Preference
+            android:key="pref_change_pass_key"
+            android:title="@string/pref_change_pass_title"
+            android:summary="@string/pref_change_pass_text" />
+
+        <Preference
+            android:key="pref_change_class_key"
+            android:title="@string/pref_change_class_title"
+            android:summary="@string/pref_change_class_text" />
+
     </PreferenceCategory>
 
 
