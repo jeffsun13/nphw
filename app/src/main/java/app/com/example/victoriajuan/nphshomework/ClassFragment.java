@@ -141,7 +141,12 @@ public class ClassFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String forecast = adapter.getItem(i);
-                GlobalVariables.setClassType(titles[i]);
+
+                if (GlobalVariables.getDay() == 17)
+                    GlobalVariables.setDetailInfo(titles[i], imgid[i], day1[i]);
+                else
+                    GlobalVariables.setDetailInfo(titles[i], imgid[i], day2[i]);
+
                 Intent intent = new Intent(getActivity(), DetailActivity.class)
                         .putExtra(Intent.EXTRA_TEXT, forecast);
                 startActivity(intent);
