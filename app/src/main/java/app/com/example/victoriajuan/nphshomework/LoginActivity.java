@@ -37,7 +37,6 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -422,6 +421,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
 
             // TODO: register the new account here.
+
             return true;
         }
 

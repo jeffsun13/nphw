@@ -72,7 +72,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
                     android:imeActionId="@+id/login"
-                    android:imeActionLabel="@string/action_sign_in_short"
+                    android:imeActionLabel="@string/action_sign_in"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
                     android:maxLines="1"
@@ -87,6 +87,30 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/action_sign_in"
+                android:backgroundTint="@color/colorAccent"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/forgot_button"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="19dp"
+                android:layout_marginTop="4dp"
+                android:text="@string/action_forgot"
+                android:background="?android:attr/selectableItemBackground"
+                android:textColor="@color/colorAccent"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/register_button"
+                style="?android:textAppearanceSmall"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_width="202dp"
+                android:layout_height="wrap_content"
+                android:text="@string/action_register"
+                android:textColor="@color/colorAccent"
                 android:textStyle="bold" />
 
         </LinearLayout>
