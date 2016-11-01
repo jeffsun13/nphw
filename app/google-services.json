@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "447963834473",
+    "firebase_url": "https://homeworkapp-b79f9.firebaseio.com",
+    "project_id": "homeworkapp-b79f9",
+    "storage_bucket": "homeworkapp-b79f9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:447963834473:android:74ec1ababd735550",
+        "android_client_info": {
+          "package_name": "app.com.example.victoriajuan.nphshomework"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "447963834473-jbt5kgo268aet64iqmu67d5uugourbq6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYjz8-1S1UuzfGi3NQko49ynQ5Kba_8AE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

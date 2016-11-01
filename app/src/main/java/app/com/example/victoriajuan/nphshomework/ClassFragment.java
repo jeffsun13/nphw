@@ -1,8 +1,9 @@
 package app.com.example.victoriajuan.nphshomework;
 
+import android.app.Fragment;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -114,6 +115,14 @@ public class ClassFragment extends Fragment {
             adapter.add(titles[rep], classData[rep]);
         }
 
+    }
+
+    public class FetchClassData extends AsyncTask<String, Void, String[]> {
+
+        @Override
+        protected String[] doInBackground(String... strings) {
+            return new String[0];
+        }
     }
 
     @Override
