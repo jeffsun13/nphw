@@ -38,37 +38,25 @@ public class ClassFragment extends Fragment {
     private String[] day1 = {
             "Read pages. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
             "Do Problems. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
-            "Watch Video. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
-            "Do Lab. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
-            "Take Pictures. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
-            "None. Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
+            "Watch Video. Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
     };
 
     private String[] day2 = {
             "Take Notes. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
             "Study for Test. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
-            "None. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
-            "Write Report. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
-            "None. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
-            "Create Presentation. Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
+            "None. Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
     };
 
     private String[] titles = {
             "English",
             "Math",
-            "History",
-            "Science",
-            "Elective",
-            "Elective2"
+            "History"
     };
 
     private Integer[] imgid={
             R.mipmap.paper,
             R.mipmap.compass,
-            R.mipmap.pencil,
-            R.mipmap.atom,
-            R.mipmap.glasses,
-            R.mipmap.ruler
+            R.mipmap.pencil
     };
 
     public ClassFragment() {
@@ -102,25 +90,10 @@ public class ClassFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            startActivity(new Intent(getActivity(), SettingsActivity.class));
-            return true;
-
-        }
 
         if (id == R.id.action_refresh) {
             updateClasses();
-            return true;
-        }
-
-         if (id == R.id.logout) {
-            SaveSharedPreference.setUserName(getActivity(), "");
-            Intent launchNextActivity;
-            launchNextActivity = new Intent(getActivity(), LoginActivity.class);
-            launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(launchNextActivity);
+            adapter.notifyDataSetChanged();
             return true;
         }
 
@@ -187,24 +160,24 @@ public class ClassFragment extends Fragment {
             final String OWM_TEACHER = "teacher";
             final String OWM_SUBJECT = "subject";
 
-            JSONObject forecastJson = new JSONObject(forecastJsonStr);
-            JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
+            JSONArray weatherArray = new JSONArray(forecastJsonStr);
 
             String[] resultStrs = new String[3];
 
             for(int i = 0; i < weatherArray.length(); i++) {
                 // For now, using the format "Day, description, hi/low"
                 String name;
+                String teacher;
 
                 // Get the JSON object representing the day
                 JSONObject dayForecast = weatherArray.getJSONObject(i);
 
                 // description is in a child array called "weather", which is 1 element long.
-                JSONObject weatherObject = dayForecast.getJSONArray(OWM_VALUE).getJSONObject(0);
+                JSONObject weatherObject = dayForecast.getJSONObject(OWM_VALUE);
                 name = weatherObject.getString(OWM_NAME);
+                teacher=weatherObject.getString(OWM_TEACHER);
 
-
-                resultStrs[i] = name;
+                resultStrs[i] = name+"-"+teacher;
             }
 
             return resultStrs;
@@ -297,7 +270,7 @@ public class ClassFragment extends Fragment {
             if (result != null) {
                 adapter.clear();
                 for (String dayForecastStr : result) {
-                    adapter.add(dayForecastStr, dayForecastStr);
+                    adapter.add(dayForecastStr.substring(0,dayForecastStr.indexOf("-")), dayForecastStr.substring(dayForecastStr.indexOf("-")+1));
                 }
             }
         }

@@ -83,7 +83,7 @@ public class ClassActivity extends AppCompatActivity {
             return true;
         }
 
-        return onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
     }
 
 
