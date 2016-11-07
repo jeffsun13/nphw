@@ -2,8 +2,10 @@ package app.com.example.victoriajuan.nphshomework;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +15,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -78,10 +90,10 @@ public class ClassFragment extends Fragment {
     public void onResume(){
         super.onResume();
         if(GlobalVariables.getDay() == 17) {
-            updateClasses(day1,titles);
+            updateClasses();
         }
         else {
-            updateClasses(day2,titles);
+            updateClasses();
         }
         adapter.notifyDataSetChanged();
     }
@@ -93,12 +105,18 @@ public class ClassFragment extends Fragment {
         if (id == R.id.action_settings) {
             startActivity(new Intent(getActivity(), SettingsActivity.class));
             return true;
+
+        }
+
+        if (id == R.id.action_refresh) {
+            updateClasses();
+            return true;
         }
 
          if (id == R.id.logout) {
-            SaveSharedPreference.setUserName(getContext(), "");
+            SaveSharedPreference.setUserName(getActivity(), "");
             Intent launchNextActivity;
-            launchNextActivity = new Intent(getContext(), LoginActivity.class);
+            launchNextActivity = new Intent(getActivity(), LoginActivity.class);
             launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -109,20 +127,10 @@ public class ClassFragment extends Fragment {
         return onOptionsItemSelected(item);
     }
 
-    public void updateClasses(String[] classData, String[] titles){
-        adapter.clear();
-        for(int rep = 0; rep < titles.length; rep++){
-            adapter.add(titles[rep], classData[rep]);
-        }
+    public void updateClasses(){
+        FetchHomeworkClass weatherTask = new FetchHomeworkClass();
+        weatherTask.execute();
 
-    }
-
-    public class FetchClassData extends AsyncTask<String, Void, String[]> {
-
-        @Override
-        protected String[] doInBackground(String... strings) {
-            return new String[0];
-        }
     }
 
     @Override
@@ -163,6 +171,136 @@ public class ClassFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+
+
+    public class FetchHomeworkClass extends AsyncTask<String, Void, String[]> {
+
+        private String[] getWeatherDataFromJson(String forecastJsonStr, int numDays)
+                throws JSONException {
+
+            // These are the names of the JSON objects that need to be extracted.
+            final String OWM_LIST = "list";
+            final String OWM_VALUE = "value";
+            final String OWM_NAME = "name";
+            final String OWM_TEACHER = "teacher";
+            final String OWM_SUBJECT = "subject";
+
+            JSONObject forecastJson = new JSONObject(forecastJsonStr);
+            JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
+
+            String[] resultStrs = new String[3];
+
+            for(int i = 0; i < weatherArray.length(); i++) {
+                // For now, using the format "Day, description, hi/low"
+                String name;
+
+                // Get the JSON object representing the day
+                JSONObject dayForecast = weatherArray.getJSONObject(i);
+
+                // description is in a child array called "weather", which is 1 element long.
+                JSONObject weatherObject = dayForecast.getJSONArray(OWM_VALUE).getJSONObject(0);
+                name = weatherObject.getString(OWM_NAME);
+
+
+                resultStrs[i] = name;
+            }
+
+            return resultStrs;
+
+        }
+
+        @Override
+        protected String[] doInBackground(String... params) {
+            // These two need to be declared outside the try/catch
+            // so that they can be closed in the finally block.
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            // Will contain the raw JSON response as a string.
+            String forecastJsonStr = null;
+
+            String format = "json";
+            String units = "metric";
+            int numDays = 7;
+
+            try {
+                // Construct the URL for the OpenWeatherMap query
+                // Possible parameters are available at OWM's forecast API page, at
+                // http://openweathermap.org/API#forecast
+                final String FORECAST_BASE_URL = "http://nphw.herokuapp.com/all-classes";
+
+                Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
+                        .build();
+
+                URL url = new URL(builtUri.toString());
+
+                // Create the request to OpenWeatherMap, and open the connection
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                // Read the input stream into a String
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    // Nothing to do.
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                    // But it does make debugging a *lot* easier if you print out the completed
+                    // buffer for debugging.
+                    buffer.append(line + "\n");
+                }
+
+                if (buffer.length() == 0) {
+                    // Stream was empty.  No point in parsing.
+                    return null;
+                }
+                forecastJsonStr = buffer.toString();
+
+            } catch (IOException e) {
+                Log.e("PlaceholderFragment", "Error ", e);
+                // If the code didn't successfully get the weather data, there's no point in attempting
+                // to parse it.
+                return null;
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("PlaceholderFragment", "Error closing stream", e);
+                    }
+                }
+            }
+
+            try {
+                return getWeatherDataFromJson(forecastJsonStr, numDays);
+            } catch (JSONException e) {
+                Log.e("CLASSFRAGMENT", e.getMessage(), e);
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String[] result) {
+            if (result != null) {
+                adapter.clear();
+                for (String dayForecastStr : result) {
+                    adapter.add(dayForecastStr, dayForecastStr);
+                }
+            }
+        }
     }
 
 
