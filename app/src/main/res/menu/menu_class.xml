@@ -20,4 +20,10 @@
         android:title="Refresh"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/class_picker"
+        android:orderInCategory="200"
+        android:title="Enroll in Classes"
+        app:showAsAction="never" />
+
 </menu>

@@ -1,9 +1,12 @@
 package app.com.example.victoriajuan.nphshomework;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,12 +33,16 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class ClassFragment extends Fragment {
+public class ClassFragment extends Fragment{
 
     private CustomAdapter adapter;
-
+    public View mProgressView;
+    public View mLoginFormView;
 
     private String[] day1 = {
+            "Read pages. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+            "Do Problems. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+            "Watch Video. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
             "Read pages. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
             "Do Problems. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
             "Watch Video. Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
@@ -50,13 +57,20 @@ public class ClassFragment extends Fragment {
     private String[] titles = {
             "English",
             "Math",
+            "History",
+            "English",
+            "Math",
             "History"
     };
+
 
     private Integer[] imgid={
             R.mipmap.paper,
             R.mipmap.compass,
-            R.mipmap.pencil
+            R.mipmap.pencil,
+            R.mipmap.glasses,
+            R.mipmap.ruler,
+            R.mipmap.atom
     };
 
     public ClassFragment() {
@@ -83,7 +97,6 @@ public class ClassFragment extends Fragment {
         else {
             updateClasses();
         }
-        adapter.notifyDataSetChanged();
     }
 
 
@@ -93,17 +106,53 @@ public class ClassFragment extends Fragment {
 
         if (id == R.id.action_refresh) {
             updateClasses();
-            adapter.notifyDataSetChanged();
+            return true;
+        }
+
+        if (id == R.id.class_picker) {
+            startActivity(new Intent(getActivity(), ClassPickerActivity.class));
             return true;
         }
 
         return onOptionsItemSelected(item);
     }
 
+    private void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
+    }
+
     public void updateClasses(){
         FetchHomeworkClass weatherTask = new FetchHomeworkClass();
         weatherTask.execute();
-
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -126,6 +175,23 @@ public class ClassFragment extends Fragment {
         adapter = new CustomAdapter(getActivity(), classTitles, weekHomework, hwIcons);
         ListView listView = (ListView) rootView.findViewById(R.id.listview_classes);
         listView.setAdapter(adapter);
+        updateClasses();
+        mProgressView = rootView.findViewById(R.id.fragment_progress);
+        mLoginFormView = rootView.findViewById(R.id.listview_classes);
+
+        /*try {
+            showProgress(true);
+            Thread.sleep(1000);
+            showProgress(false);
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }*/
+
+
+
+
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -133,17 +199,25 @@ public class ClassFragment extends Fragment {
                 String forecast = adapter.getItem(i);
 
                 if (GlobalVariables.getDay() == 17)
-                    GlobalVariables.setDetailInfo(titles[i], imgid[i], day1[i]);
+                    GlobalVariables.setDetailInfo(adapter.getTitle(i), imgid[i], adapter.getDescr(i));
                 else
-                    GlobalVariables.setDetailInfo(titles[i], imgid[i], day2[i]);
+                    GlobalVariables.setDetailInfo(adapter.getTitle(i), imgid[i], adapter.getDescr(i));
 
                 Intent intent = new Intent(getActivity(), DetailActivity.class)
                         .putExtra(Intent.EXTRA_TEXT, forecast);
                 startActivity(intent);
             }
         });
-
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState)
+    {
+        super.onActivityCreated(savedInstanceState);
+        updateClasses();
+        adapter.notifyDataSetChanged();
+
     }
 
 
@@ -152,6 +226,8 @@ public class ClassFragment extends Fragment {
 
         private String[] getWeatherDataFromJson(String forecastJsonStr, int numDays)
                 throws JSONException {
+
+            showProgress(true);
 
             // These are the names of the JSON objects that need to be extracted.
             final String OWM_LIST = "list";
@@ -162,7 +238,7 @@ public class ClassFragment extends Fragment {
 
             JSONArray weatherArray = new JSONArray(forecastJsonStr);
 
-            String[] resultStrs = new String[3];
+            String[] resultStrs = new String[6];
 
             for(int i = 0; i < weatherArray.length(); i++) {
                 // For now, using the format "Day, description, hi/low"
@@ -267,12 +343,15 @@ public class ClassFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String[] result) {
+
             if (result != null) {
                 adapter.clear();
                 for (String dayForecastStr : result) {
                     adapter.add(dayForecastStr.substring(0,dayForecastStr.indexOf("-")), dayForecastStr.substring(dayForecastStr.indexOf("-")+1));
                 }
             }
+
+            showProgress(false.);
         }
     }
 

@@ -2,6 +2,8 @@ package app.com.example.victoriajuan.nphshomework;
 
 import android.app.Application;
 
+import java.util.List;
+
 /**
  * Created by Jeffrey Sun on 9/18/2016.
  */
@@ -13,6 +15,7 @@ public class GlobalVariables extends Application {
     private static String CLASS_TYPE;
     private static int ICON_TYPE;
     private static String CLASS_DETAILS;
+    public static List<String> CLASSES;
 
     public static int getDay() {
         return DAY;

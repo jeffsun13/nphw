@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-//dani suckxs dick
 
 public class CustomAdapter extends ArrayAdapter<String> {
 
@@ -42,6 +41,14 @@ public class CustomAdapter extends ArrayAdapter<String> {
         extratxt.setText(itemDescr.get(position));
         return rowView;
 
+    }
+    public String getTitle(int position)
+    {
+        return itemTitle.get(position);
+    }
+    public String getDescr(int position)
+    {
+        return itemDescr.get(position);
     }
 
 

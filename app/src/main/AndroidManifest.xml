@@ -38,11 +38,14 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity
-            android:name=".CalendarActivity" />
+        <activity android:name=".CalendarActivity" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/action_settings" />
+        <activity
+            android:name=".ClassPickerActivity"
+            android:label="@string/title_activity_class_picker"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

@@ -7,8 +7,16 @@
     tools:context="app.com.example.victoriajuan.nphshomework.ClassFragment"
     tools:showIn="@layout/activity_class">
 
-    <ListView
+    <ProgressBar
+        android:id="@+id/fragment_progress"
+        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone" />
+
+    <ListView
+        android:layout_width="match_parent"
         android:scrollbarStyle="outsideInset"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
