@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -41,6 +42,7 @@ public class ClassFragment extends Fragment{
     private CustomAdapter adapter;
     private View mProgressView;
     private View mLoginFormView;
+    private Handler mHandler = new Handler();
 
     private String[] day1 = {
             "Read pages. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
@@ -178,7 +180,7 @@ public class ClassFragment extends Fragment{
         adapter = new CustomAdapter(getActivity(), classTitles, weekHomework, hwIcons);
         ListView listView = (ListView) rootView.findViewById(R.id.listview_classes);
         listView.setAdapter(adapter);
-        updateClasses();
+
 
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -205,27 +207,22 @@ public class ClassFragment extends Fragment{
         super.onActivityCreated(savedInstanceState);
         mProgressView = getView().findViewById(R.id.fragment_progress);
         mLoginFormView = getView().findViewById(R.id.listview_classes);
+        updateClasses();
 
-        try {
-            showProgress(true);
-            Thread.sleep(1000);
-            showProgress(false);
-        }
-        catch (InterruptedException e)
-        {
-            e.printStackTrace();
-        }
+        showProgress(true);
+        mHandler.postDelayed(new Runnable() {
+            public void run() {
+                showProgress(false);
+            }
+        }, 1000);
+
+
     }
-
-
 
     public class FetchHomeworkClass extends AsyncTask<String, Void, String[]> {
 
         private String[] getWeatherDataFromJson(String forecastJsonStr, int numDays)
                 throws JSONException {
-
-
-
             // These are the names of the JSON objects that need to be extracted.
             final String OWM_LIST = "list";
             final String OWM_VALUE = "value";
