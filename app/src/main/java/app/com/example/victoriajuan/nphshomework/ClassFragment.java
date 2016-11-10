@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,12 +33,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static app.com.example.victoriajuan.nphshomework.R.id.container;
+
 
 public class ClassFragment extends Fragment{
 
     private CustomAdapter adapter;
-    public View mProgressView;
-    public View mLoginFormView;
+    private View mProgressView;
+    private View mLoginFormView;
 
     private String[] day1 = {
             "Read pages. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
@@ -81,6 +84,7 @@ public class ClassFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
     }
 
     @Override
@@ -99,7 +103,6 @@ public class ClassFragment extends Fragment{
         }
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -117,7 +120,13 @@ public class ClassFragment extends Fragment{
         return onOptionsItemSelected(item);
     }
 
-    private void showProgress(final boolean show) {
+    public void updateClasses(){
+        FetchHomeworkClass weatherTask = new FetchHomeworkClass();
+        weatherTask.execute();
+        adapter.notifyDataSetChanged();
+    }
+
+    public void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
@@ -149,12 +158,6 @@ public class ClassFragment extends Fragment{
         }
     }
 
-    public void updateClasses(){
-        FetchHomeworkClass weatherTask = new FetchHomeworkClass();
-        weatherTask.execute();
-        adapter.notifyDataSetChanged();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -176,21 +179,6 @@ public class ClassFragment extends Fragment{
         ListView listView = (ListView) rootView.findViewById(R.id.listview_classes);
         listView.setAdapter(adapter);
         updateClasses();
-        mProgressView = rootView.findViewById(R.id.fragment_progress);
-        mLoginFormView = rootView.findViewById(R.id.listview_classes);
-
-        /*try {
-            showProgress(true);
-            Thread.sleep(1000);
-            showProgress(false);
-        }
-        catch (InterruptedException e)
-        {
-            e.printStackTrace();
-        }*/
-
-
-
 
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -215,9 +203,18 @@ public class ClassFragment extends Fragment{
     public void onActivityCreated(Bundle savedInstanceState)
     {
         super.onActivityCreated(savedInstanceState);
-        updateClasses();
-        adapter.notifyDataSetChanged();
+        mProgressView = getView().findViewById(R.id.fragment_progress);
+        mLoginFormView = getView().findViewById(R.id.listview_classes);
 
+        try {
+            showProgress(true);
+            Thread.sleep(1000);
+            showProgress(false);
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
     }
 
 
@@ -227,7 +224,7 @@ public class ClassFragment extends Fragment{
         private String[] getWeatherDataFromJson(String forecastJsonStr, int numDays)
                 throws JSONException {
 
-            showProgress(true);
+
 
             // These are the names of the JSON objects that need to be extracted.
             final String OWM_LIST = "list";
@@ -263,7 +260,7 @@ public class ClassFragment extends Fragment{
         @Override
         protected String[] doInBackground(String... params) {
             // These two need to be declared outside the try/catch
-            // so that they can be closed in the finally block.
+            // so that they can be closed in the finally block
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
@@ -343,17 +340,12 @@ public class ClassFragment extends Fragment{
 
         @Override
         protected void onPostExecute(String[] result) {
-
             if (result != null) {
                 adapter.clear();
                 for (String dayForecastStr : result) {
                     adapter.add(dayForecastStr.substring(0,dayForecastStr.indexOf("-")), dayForecastStr.substring(dayForecastStr.indexOf("-")+1));
                 }
             }
-
-            showProgress(false.);
         }
     }
-
-
 }

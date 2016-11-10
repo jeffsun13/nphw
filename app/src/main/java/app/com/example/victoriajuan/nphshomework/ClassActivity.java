@@ -1,6 +1,9 @@
 package app.com.example.victoriajuan.nphshomework;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -23,7 +26,6 @@ public class ClassActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (SaveSharedPreference.getUserName(ClassActivity.this).length() == 0) {
             finish();
             startActivity(new Intent(ClassActivity.this, LoginActivity.class));
@@ -86,6 +88,7 @@ public class ClassActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 
 
 
