@@ -52,6 +52,7 @@ public class ClassActivity extends AppCompatActivity {
         GlobalVariables.setDate(day2 ,month2,year2);
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_class, menu);

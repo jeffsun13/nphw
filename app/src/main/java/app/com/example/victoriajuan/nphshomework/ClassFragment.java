@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,8 +34,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
+import static android.R.id.message;
 import static app.com.example.victoriajuan.nphshomework.R.id.container;
+import static app.com.example.victoriajuan.nphshomework.R.id.swiperefresh;
 
 
 public class ClassFragment extends Fragment{
@@ -43,6 +47,7 @@ public class ClassFragment extends Fragment{
     private View mProgressView;
     private View mLoginFormView;
     private Handler mHandler = new Handler();
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private String[] day1 = {
             "Read pages. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
@@ -87,6 +92,7 @@ public class ClassFragment extends Fragment{
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
+
     }
 
     @Override
@@ -111,6 +117,12 @@ public class ClassFragment extends Fragment{
 
         if (id == R.id.action_refresh) {
             updateClasses();
+            showProgress(true);
+            mHandler.postDelayed(new Runnable() {
+                public void run() {
+                    showProgress(false);
+                }
+            }, 1000);
             return true;
         }
 
@@ -207,15 +219,35 @@ public class ClassFragment extends Fragment{
         super.onActivityCreated(savedInstanceState);
         mProgressView = getView().findViewById(R.id.fragment_progress);
         mLoginFormView = getView().findViewById(R.id.listview_classes);
-        updateClasses();
+
+        FetchHomeworkClass weatherTask = new FetchHomeworkClass();
 
         showProgress(true);
-        mHandler.postDelayed(new Runnable() {
-            public void run() {
-                showProgress(false);
-            }
-        }, 1000);
+        try {
+            String[] str_result = weatherTask.execute().get();
+            adapter.notifyDataSetChanged();
+        } catch (InterruptedException e) {
+            Log.e("PlaceholderFragment", "Error ", e);
+        } catch (ExecutionException e) {
+            Log.e("PlaceholderFragment", "Error ", e);
+        }
+        showProgress(false);
 
+        mSwipeRefreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.swiperefresh);
+        mSwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        updateClasses();
+                        mHandler.postDelayed(new Runnable() {
+                            public void run() {
+                                showProgress(false);
+                                mSwipeRefreshLayout.setRefreshing(false);
+                            }
+                        }, 1000);
+                    }
+                }
+        );
 
     }
 
