@@ -37,17 +37,18 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static android.R.id.message;
-import static app.com.example.victoriajuan.nphshomework.R.id.container;
+
 import static app.com.example.victoriajuan.nphshomework.R.id.swiperefresh;
 
 
-public class ClassFragment extends Fragment{
+public class ClassFragment extends Fragment {
 
     private CustomAdapter adapter;
     private View mProgressView;
     private View mLoginFormView;
     private Handler mHandler = new Handler();
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private ListView listView;
 
     private String[] day1 = {
             "Read pages. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
@@ -187,13 +188,8 @@ public class ClassFragment extends Fragment{
 
 
         View rootView=inflater.inflate(R.layout.fragment_class, container, false);
-
-
         adapter = new CustomAdapter(getActivity(), classTitles, weekHomework, hwIcons);
-        ListView listView = (ListView) rootView.findViewById(R.id.listview_classes);
-        listView.setAdapter(adapter);
-
-
+        listView = (ListView) rootView.findViewById(R.id.listview_classes);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -219,18 +215,8 @@ public class ClassFragment extends Fragment{
         super.onActivityCreated(savedInstanceState);
         mProgressView = getView().findViewById(R.id.fragment_progress);
         mLoginFormView = getView().findViewById(R.id.listview_classes);
-
-        FetchHomeworkClass weatherTask = new FetchHomeworkClass();
-
         showProgress(true);
-        try {
-            String[] str_result = weatherTask.execute().get();
-            adapter.notifyDataSetChanged();
-        } catch (InterruptedException e) {
-            Log.e("PlaceholderFragment", "Error ", e);
-        } catch (ExecutionException e) {
-            Log.e("PlaceholderFragment", "Error ", e);
-        }
+        updateClasses();
         showProgress(false);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.swiperefresh);
@@ -241,7 +227,6 @@ public class ClassFragment extends Fragment{
                         updateClasses();
                         mHandler.postDelayed(new Runnable() {
                             public void run() {
-                                showProgress(false);
                                 mSwipeRefreshLayout.setRefreshing(false);
                             }
                         }, 1000);
@@ -375,6 +360,8 @@ public class ClassFragment extends Fragment{
                     adapter.add(dayForecastStr.substring(0,dayForecastStr.indexOf("-")), dayForecastStr.substring(dayForecastStr.indexOf("-")+1));
                 }
             }
+            listView.setAdapter(adapter);
+            ((ClassActivity)getActivity()).showProgress(false);
         }
     }
 }

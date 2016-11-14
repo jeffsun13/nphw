@@ -20,6 +20,7 @@ import java.util.Calendar;
  */
 public class ClassActivity extends AppCompatActivity {
 
+    private View mProgressView;
     public ClassActivity() {
     }
 
@@ -32,6 +33,9 @@ public class ClassActivity extends AppCompatActivity {
         }
         else {
             setContentView(R.layout.activity_class);
+
+            mProgressView = findViewById(R.id.fragment_progress);
+            showProgress(true);
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
 
@@ -52,6 +56,29 @@ public class ClassActivity extends AppCompatActivity {
         GlobalVariables.setDate(day2 ,month2,year2);
     }
 
+
+
+    public void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

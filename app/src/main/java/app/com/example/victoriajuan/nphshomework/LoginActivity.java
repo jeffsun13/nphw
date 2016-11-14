@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,6 +37,14 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,7 +93,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -114,57 +122,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     }
 
-
-
-
-    private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
-        }
-
-        if (VERSION.SDK_INT >= 14) {
-            // Use ContactsContract.Profile (API 14+)
-            getLoaderManager().initLoader(0, null, this);
-        } else if (VERSION.SDK_INT >= 8) {
-            // Use AccountManager (API 8+)
-            new SetupEmailAutoCompleteTask().execute(null, null);
-        }
-    }
-
-    private boolean mayRequestContacts() {
-        if (VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
-            }
-        }
-    }
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -357,35 +314,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         int IS_PRIMARY = 1;
     }
 
-    /**
-     * Use an AsyncTask to fetch the user's email addresses on a background thread, and update
-     * the email text field with results on the main UI thread.
-     */
-    class SetupEmailAutoCompleteTask extends AsyncTask<Void, Void, List<String>> {
 
-        @Override
-        protected List<String> doInBackground(Void... voids) {
-            ArrayList<String> emailAddressCollection = new ArrayList<>();
-
-            // Get all emails from the user's contacts and copy them to a list.
-            ContentResolver cr = getContentResolver();
-            Cursor emailCur = cr.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null,
-                    null, null, null);
-            while (emailCur.moveToNext()) {
-                String email = emailCur.getString(emailCur.getColumnIndex(ContactsContract
-                        .CommonDataKinds.Email.DATA));
-                emailAddressCollection.add(email);
-            }
-            emailCur.close();
-
-            return emailAddressCollection;
-        }
-
-        @Override
-        protected void onPostExecute(List<String> emailAddressCollection) {
-            addEmailsToAutoComplete(emailAddressCollection);
-        }
-    }
 
     /**
      * Represents an asynchronous login/registration task used to authenticate
@@ -404,12 +333,72 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
 
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
+                // Construct the URL for the OpenWeatherMap query
+                // Possible parameters are available at OWM's forecast API page, at
+                // http://openweathermap.org/API#forecast
+                final String FORECAST_BASE_URL = "http://nphw.herokuapp.com/login";
+
+                String data = URLEncoder.encode("username", "UTF-8") + "=" +URLEncoder.encode(username,"UTF-8");
+                Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
+                        .build();
+
+                URL url = new URL(builtUri.toString());
+
+                // Create the request to OpenWeatherMap, and open the connection
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.connect();
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
+                wr.write(data);
+                wr.flush();
+
+
+
+                // Read the input stream into a String
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    // Nothing to do.
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                    // But it does make debugging a *lot* easier if you print out the completed
+                    // buffer for debugging.
+                    buffer.append(line + "\n");
+                }
+
+                if (buffer.length() == 0) {
+                    // Stream was empty.  No point in parsing.
+                    return null;
+                }
+                forecastJsonStr = buffer.toString();
+
+            } catch (IOException e) {
+                Log.e("PlaceholderFragment", "Error ", e);
+                // If the code didn't successfully get the weather data, there's no point in attempting
+                // to parse it.
+                return null;
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("PlaceholderFragment", "Error closing stream", e);
+                    }
+                }
             }
 
             for (String credential : DUMMY_CREDENTIALS) {

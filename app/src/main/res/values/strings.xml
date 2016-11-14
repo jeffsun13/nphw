@@ -45,4 +45,7 @@
     <string name="pref_change_class_text">Choose different classes on your schedule.</string>
     <string name="title_activity_class_picker">ClassPickerActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
