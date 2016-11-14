@@ -4,11 +4,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.content.ContentResolver;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -17,8 +15,6 @@ import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -47,8 +43,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via email/password.
@@ -182,7 +176,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > 3;
     }
 
     /**
@@ -343,21 +337,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 // http://openweathermap.org/API#forecast
                 final String FORECAST_BASE_URL = "http://nphw.herokuapp.com/login";
 
-                String data = URLEncoder.encode("username", "UTF-8") + "=" +URLEncoder.encode(username,"UTF-8");
-                Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
-                        .build();
+                String data = URLEncoder.encode("username", "UTF-8") + "=" + URLEncoder.encode(mEmail,"UTF-8");
+                data += "&" + URLEncoder.encode("password", "UTF-8") + "=" +
+                        URLEncoder.encode(mPassword, "UTF-8");
 
-                URL url = new URL(builtUri.toString());
+                URL url = new URL(FORECAST_BASE_URL);
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.connect();
                 urlConnection.setRequestMethod("POST");
                 urlConnection.setDoOutput(true);
+                //urlConnection.connect();
                 OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
                 wr.write(data);
                 wr.flush();
-
 
 
                 // Read the input stream into a String
@@ -367,21 +360,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     // Nothing to do.
                     return null;
                 }
-                reader = new BufferedReader(new InputStreamReader(inputStream));
 
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                    // But it does make debugging a *lot* easier if you print out the completed
-                    // buffer for debugging.
-                    buffer.append(line + "\n");
+                 reader = new BufferedReader(new
+                        InputStreamReader(inputStream));
+
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+                // Read Server Response
+                while((line = reader.readLine()) != null) {
+                    sb.append(line);
+                    break;
                 }
 
-                if (buffer.length() == 0) {
-                    // Stream was empty.  No point in parsing.
-                    return null;
-                }
-                forecastJsonStr = buffer.toString();
+                return true;
 
             } catch (IOException e) {
                 Log.e("PlaceholderFragment", "Error ", e);
@@ -401,17 +393,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 }
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            // TODO: register the new account here.
-
-            return true;
         }
 
         @Override
