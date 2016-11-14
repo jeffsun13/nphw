@@ -352,6 +352,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 wr.write(data);
                 wr.flush();
 
+                //YOLO
+
 
                 // Read the input stream into a String
                 InputStream inputStream = urlConnection.getInputStream();
