@@ -59,12 +59,6 @@ public class ClassFragment extends Fragment {
             "Watch Video. Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
     };
 
-    private String[] day2 = {
-            "Take Notes. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
-            "Study for Test. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
-            "None. Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
-    };
-
     private String[] titles = {
             "English",
             "Math",
