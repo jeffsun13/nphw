@@ -283,7 +283,7 @@ public class ClassFragment extends Fragment {
                 // Construct the URL for the OpenWeatherMap query
                 // Possible parameters are available at OWM's forecast API page, at
                 // http://openweathermap.org/API#forecast
-                final String FORECAST_BASE_URL = "http://nphw.herokuapp.com/all-classes";
+                final String FORECAST_BASE_URL = "http://nphw.herokuapp.com/api/all-classes";
 
                 Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
                         .build();

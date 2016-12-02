@@ -2,6 +2,7 @@ package app.com.example.victoriajuan.nphshomework;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -10,6 +11,7 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v4.view.ViewPager;
@@ -78,15 +80,28 @@ public class ClassPickerActivity extends AppCompatActivity {
         mProgressView = findViewById(R.id.picker_progress);
         mLoginFormView = findViewById(R.id.listview_classes2);
         List<String> classTitles;
-
         classTitles = new ArrayList<String>(Arrays.asList(titles));
-
-
         adapter = new ArrayAdapter<String>(
                 ClassPickerActivity.this,
-                R.layout.list_item,
-                R.id.list_item,
+                R.layout.list_item_classpicker,
+                R.id.list_item_classpicker,
                 classTitles);
+        AlertDialog alertDialog = new AlertDialog.Builder(ClassPickerActivity.this().create();
+        alertDialog.setTitle("View or send?");
+        alertDialog.setMessage("Do you want to send this file to your organization for source checking, or view it yourself?");
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Send",
+        new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Display",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                }
+            });
+        alertDialog.show();
+
 
         listView = (ListView) findViewById(R.id.listview_classes2);
 
@@ -95,6 +110,7 @@ public class ClassPickerActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String forecast = adapter.getItem(i);
+
             }
         });
     }
@@ -214,7 +230,7 @@ public class ClassPickerActivity extends AppCompatActivity {
                 // Construct the URL for the OpenWeatherMap query
                 // Possible parameters are available at OWM's forecast API page, at
                 // http://openweathermap.org/API#forecast
-                final String FORECAST_BASE_URL = "http://nphw.herokuapp.com/all-classes";
+                final String FORECAST_BASE_URL = "http://nphw.herokuapp.com/api/all-classes";
 
                 Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
                         .build();
