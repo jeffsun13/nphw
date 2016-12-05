@@ -31,20 +31,27 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static android.R.attr.data;
+import static java.security.AccessController.getContext;
+
 public class ClassPickerActivity extends AppCompatActivity {
 
 
+    private UserLoginTask mAuthTask = null;
     private ArrayAdapter<String> adapter;
     private View mProgressView;
     private View mLoginFormView;
@@ -86,35 +93,31 @@ public class ClassPickerActivity extends AppCompatActivity {
                 R.layout.list_item_classpicker,
                 R.id.list_item_classpicker,
                 classTitles);
-        AlertDialog alertDialog = new AlertDialog.Builder(ClassPickerActivity.this().create();
-        alertDialog.setTitle("View or send?");
-        alertDialog.setMessage("Do you want to send this file to your organization for source checking, or view it yourself?");
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Send",
-        new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                }
-            });
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Display",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                }
-            });
-        alertDialog.show();
-
-
         listView = (ListView) findViewById(R.id.listview_classes2);
-
         updateClasses();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String forecast = adapter.getItem(i);
-
+                final String forecast = adapter.getItem(i);
+                new AlertDialog.Builder(ClassPickerActivity.this)
+                        .setTitle("Enroll in Class?")
+                        .setMessage("Would you like to add this class to your schedule?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                mAuthTask = new ClassPickerActivity.UserLoginTask(forecast);
+                                mAuthTask.execute();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
             }
         });
     }
-
     public void updateClasses(){
         FetchHomeworkClass weatherTask = new FetchHomeworkClass();
         weatherTask.execute();
@@ -173,6 +176,90 @@ public class ClassPickerActivity extends AppCompatActivity {
             // and hide the relevant UI components.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
+    }
+    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+
+        private final String classes;
+        UserLoginTask(String forecast) {
+                classes=forecast;
+        }
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+            try {
+                // Construct the URL for the OpenWeatherMap query
+                // Possible parameters are available at OWM's forecast API page, at
+                // http://openweathermap.org/API#forecast
+                final String FORECAST_BASE_URL = "http://nphw.herokuapp.com/api/add-class";
+                Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
+                        .build();
+
+                URL url = new URL(builtUri.toString());
+                // Create the request to OpenWeatherMap, and open the connection
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setDoOutput(true);
+                //urlConnection.connect();
+                OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
+                JSONArray json = new JSONArray();
+                try{
+                    json.put("2");
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
+                wr.write(json.toString());
+                wr.flush();
+
+                // Read the input stream into a String
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    // Nothing to do.
+                }
+
+                reader = new BufferedReader(new
+                        InputStreamReader(inputStream));
+
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+                // Read Server Response
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                    break;
+                }
+                return true;
+            } catch (IOException e) {
+                Log.e("PlaceholderFragment", "Error ", e);
+                // If the code didn't successfully get the weather data, there's no point in attempting
+                // to parse it.
+                return null;
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("PlaceholderFragment", "Error closing stream", e);
+                    }
+                }
+            }
+        }
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            mAuthTask = null;
+            showProgress(false);
+        }
+        @Override
+        protected void onCancelled() {
+            mAuthTask = null;
+            showProgress(false);
         }
     }
 
