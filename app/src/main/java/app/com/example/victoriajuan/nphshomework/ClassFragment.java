@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,11 +33,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import static android.R.id.message;
-
-import static app.com.example.victoriajuan.nphshomework.R.id.swiperefresh;
 
 
 public class ClassFragment extends Fragment {
@@ -283,7 +277,7 @@ public class ClassFragment extends Fragment {
                 // Construct the URL for the OpenWeatherMap query
                 // Possible parameters are available at OWM's forecast API page, at
                 // http://openweathermap.org/API#forecast
-                final String FORECAST_BASE_URL = "http://nphw.herokuapp.com/api/all-classes";
+                final String FORECAST_BASE_URL = "http://nphw.herokuapp.com/api/own-classes";
 
                 Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
                         .build();

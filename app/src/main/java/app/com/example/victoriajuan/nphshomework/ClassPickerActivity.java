@@ -3,35 +3,25 @@ package app.com.example.victoriajuan.nphshomework;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.support.v4.view.ViewPager;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONStringer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,18 +30,14 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static android.R.attr.data;
-import static java.security.AccessController.getContext;
-
 public class ClassPickerActivity extends AppCompatActivity {
 
 
-    private UserLoginTask mAuthTask = null;
+    private AddClassTask mAuthTask = null;
     private ArrayAdapter<String> adapter;
     private View mProgressView;
     private View mLoginFormView;
@@ -104,7 +90,7 @@ public class ClassPickerActivity extends AppCompatActivity {
                         .setMessage("Would you like to add this class to your schedule?")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                mAuthTask = new ClassPickerActivity.UserLoginTask(forecast);
+                                mAuthTask = new ClassPickerActivity.AddClassTask(forecast);
                                 mAuthTask.execute();
                             }
                         })
@@ -178,12 +164,14 @@ public class ClassPickerActivity extends AppCompatActivity {
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+
+    public class AddClassTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String classes;
-        UserLoginTask(String forecast) {
+        AddClassTask(String forecast) {
                 classes=forecast;
         }
+
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
@@ -204,9 +192,9 @@ public class ClassPickerActivity extends AppCompatActivity {
                 urlConnection.setDoOutput(true);
                 //urlConnection.connect();
                 OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
-                JSONArray json = new JSONArray();
+                JSONObject json = new JSONObject();
                 try{
-                    json.put("2");
+                    json.accumulate("classes","2");
                 }
                 catch(Exception e){
                     e.printStackTrace();
@@ -308,9 +296,6 @@ public class ClassPickerActivity extends AppCompatActivity {
 
             // Will contain the raw JSON response as a string.
             String forecastJsonStr = null;
-
-            String format = "json";
-            String units = "metric";
             int numDays = 7;
 
             try {
