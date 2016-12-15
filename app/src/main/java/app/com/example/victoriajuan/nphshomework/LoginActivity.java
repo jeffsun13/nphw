@@ -33,6 +33,8 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import org.json.JSONException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -319,6 +321,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         private final String mEmail;
         private final String mPassword;
 
+        String tokenJsonStr = null;
+
         UserLoginTask(String email, String password) {
             mEmail = email;
             mPassword = password;
@@ -335,7 +339,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 // Construct the URL for the OpenWeatherMap query
                 // Possible parameters are available at OWM's forecast API page, at
                 // http://openweathermap.org/API#forecast
-                final String FORECAST_BASE_URL = "http://nphw.herokuapp.com/login";
+                final String FORECAST_BASE_URL = "http://nphw.herokuapp.com/api/login";
 
                 String data = URLEncoder.encode("username", "UTF-8") + "=" + URLEncoder.encode(mEmail,"UTF-8");
                 data += "&" + URLEncoder.encode("password", "UTF-8") + "=" +
@@ -351,9 +355,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
                 wr.write(data);
                 wr.flush();
-
-                //YOLO
-
 
                 // Read the input stream into a String
                 InputStream inputStream = urlConnection.getInputStream();
@@ -371,10 +372,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 // Read Server Response
                 while((line = reader.readLine()) != null) {
-                    sb.append(line);
-                    break;
+                    buffer.append(line);
                 }
-
+                if (buffer.length() == 0) {
+                    // Stream was empty.  No point in parsing.
+                    return null;
+                }
+                tokenJsonStr = buffer.toString();
+                SaveSharedPreference.setLoginToken(LoginActivity.this,tokenJsonStr);
                 return true;
 
             } catch (IOException e) {

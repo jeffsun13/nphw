@@ -24,15 +24,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static app.com.example.victoriajuan.nphshomework.SaveSharedPreference.LOGIN_TOKEN;
 
 public class ClassPickerActivity extends AppCompatActivity {
 
@@ -167,9 +173,9 @@ public class ClassPickerActivity extends AppCompatActivity {
 
     public class AddClassTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String classes;
+        private final String myClasses;
         AddClassTask(String forecast) {
-                classes=forecast;
+                myClasses=forecast;
         }
 
         @Override
@@ -177,6 +183,8 @@ public class ClassPickerActivity extends AppCompatActivity {
             // TODO: attempt authentication against a network service.
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
+            DataOutputStream printout;
+            DataInputStream input;
             try {
                 // Construct the URL for the OpenWeatherMap query
                 // Possible parameters are available at OWM's forecast API page, at
@@ -188,19 +196,25 @@ public class ClassPickerActivity extends AppCompatActivity {
                 URL url = new URL(builtUri.toString());
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestProperty ("token", SaveSharedPreference.getLoginToken(ClassPickerActivity.this));
+                Log.e("SOMESHIT",urlConnection.getRequestProperty("token"));
                 urlConnection.setRequestMethod("POST");
+                //urlConnection.setRequestProperty("Content-Type","application/json");
                 urlConnection.setDoOutput(true);
-                //urlConnection.connect();
-                OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
-                JSONObject json = new JSONObject();
+                urlConnection.connect();
+                JSONObject jsonArr = new JSONObject();
+                OutputStreamWriter wr = new   OutputStreamWriter(urlConnection.getOutputStream());
+                String[] classes = {"2","3","4"};
                 try{
-                    json.accumulate("classes","2");
+                    jsonArr.put("classes",classes);
                 }
                 catch(Exception e){
                     e.printStackTrace();
                 }
-                wr.write(json.toString());
-                wr.flush();
+                printout = new DataOutputStream(urlConnection.getOutputStream());
+                printout.writeBytes(jsonArr.toString());
+                printout.flush ();
+                printout.close ();
 
                 // Read the input stream into a String
                 InputStream inputStream = urlConnection.getInputStream();

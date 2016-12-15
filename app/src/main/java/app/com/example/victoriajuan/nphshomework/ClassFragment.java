@@ -170,6 +170,8 @@ public class ClassFragment extends Fragment {
         List<String> weekHomework;
         List<Integer> hwIcons;
 
+
+
         classTitles = new ArrayList<String>(Arrays.asList(titles));
         weekHomework = new ArrayList<String>(Arrays.asList(day1));
         hwIcons = new ArrayList<Integer>(Arrays.asList(imgid));
@@ -277,7 +279,7 @@ public class ClassFragment extends Fragment {
                 // Construct the URL for the OpenWeatherMap query
                 // Possible parameters are available at OWM's forecast API page, at
                 // http://openweathermap.org/API#forecast
-                final String FORECAST_BASE_URL = "http://nphw.herokuapp.com/api/own-classes";
+                final String FORECAST_BASE_URL = "http://nphw.herokuapp.com/api/all-classes";
 
                 Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
                         .build();

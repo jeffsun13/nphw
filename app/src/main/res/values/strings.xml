@@ -43,7 +43,7 @@
     <string name="pref_change_pass_text">Set a new password for your account.</string>
     <string name="pref_change_class_title">Change Classes</string>
     <string name="pref_change_class_text">Choose different classes on your schedule.</string>
-    <string name="title_activity_class_picker">ClassPickerActivity</string>
+    <string name="title_activity_class_picker">Enroll in Classes</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
     <!-- TODO: Remove or change this placeholder text -->

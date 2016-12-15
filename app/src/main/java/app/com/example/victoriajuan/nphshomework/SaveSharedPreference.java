@@ -11,6 +11,7 @@ public class SaveSharedPreference {
     static final String YEAR = "nuts";
     static final String NIGHT_NOT = "";
     static final String MORN_NOT = "";
+    static final String LOGIN_TOKEN = "";
 
     static SharedPreferences getSharedPreferences(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -35,6 +36,19 @@ public class SaveSharedPreference {
             editor.putBoolean(MORN_NOT, Boolean.parseBoolean(val));
         editor.apply();
     }
+
+    public static void setLoginToken(Context ctx, String token) {
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        int tokenLoc = token.indexOf("token");
+
+        editor.putString(LOGIN_TOKEN, token.substring(tokenLoc+8,token.length()-2));
+        editor.apply();
+    }
+
+    public static String getLoginToken(Context ctx) {
+        return getSharedPreferences(ctx).getString(LOGIN_TOKEN, "");
+    }
+
 
     public static boolean getMornNot(Context ctx) { return getSharedPreferences(ctx).getBoolean(MORN_NOT, true); }
     public static boolean getNightNot(Context ctx) { return getSharedPreferences(ctx).getBoolean(NIGHT_NOT, true); }
