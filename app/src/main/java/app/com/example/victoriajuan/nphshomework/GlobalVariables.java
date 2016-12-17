@@ -2,6 +2,7 @@ package app.com.example.victoriajuan.nphshomework;
 
 import android.app.Application;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ public class GlobalVariables extends Application {
     private static String CLASS_TYPE;
     private static int ICON_TYPE;
     private static String CLASS_DETAILS;
-    public static List<String> CLASSES;
+    public static List<String> CLASSES=new ArrayList<String>();
 
     public static int getDay() {
         return DAY;
@@ -34,6 +35,12 @@ public class GlobalVariables extends Application {
     public static int getIconType() { return ICON_TYPE; }
 
     public static String getClassDetails() { return CLASS_DETAILS; }
+
+    public static List<String> getClasses() {return CLASSES;}
+
+    public static void addClass(String theclass){
+        CLASSES.add(theclass);
+    }
 
     public static void setDate(int day, int month, int year) {
         DAY = day;

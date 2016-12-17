@@ -36,7 +36,9 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static app.com.example.victoriajuan.nphshomework.SaveSharedPreference.LOGIN_TOKEN;
 
@@ -68,11 +70,23 @@ public class ClassPickerActivity extends AppCompatActivity {
     };
     private String[] imgid = {
     };
+    private static final Map<String, String> myMap;
+    static
+    {
+        myMap = new HashMap<String, String>();
+        myMap.put("IB Chemistry Year 2", "1");
+        myMap.put("IB Math HL", "2");
+        myMap.put("Honors Independent CS", "3");
+        myMap.put("IB 20th Century", "4");
+        myMap.put("IB English Year 2", "5");
+        myMap.put("Theory of Knowledge", "6");
+    }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Log.e("thefirsttoken",SaveSharedPreference.getLoginToken(ClassPickerActivity.this));
         setContentView(R.layout.activity_class_picker);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -96,7 +110,8 @@ public class ClassPickerActivity extends AppCompatActivity {
                         .setMessage("Would you like to add this class to your schedule?")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                mAuthTask = new ClassPickerActivity.AddClassTask(forecast);
+                                //Log.e("earlytoken",SaveSharedPreference.getLoginToken(ClassPickerActivity.this));
+                                mAuthTask = new ClassPickerActivity.AddClassTask(myMap.get(forecast));
                                 mAuthTask.execute();
                             }
                         })
@@ -173,10 +188,10 @@ public class ClassPickerActivity extends AppCompatActivity {
 
     public class AddClassTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String myClasses;
         AddClassTask(String forecast) {
-                myClasses=forecast;
+           GlobalVariables.addClass(forecast);
         }
+
 
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -192,21 +207,28 @@ public class ClassPickerActivity extends AppCompatActivity {
                 final String FORECAST_BASE_URL = "http://nphw.herokuapp.com/api/add-class";
                 Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
                         .build();
-
+                //Log.e("theclass",SaveSharedPreference.getClasses(ClassPickerActivity.this));
                 URL url = new URL(builtUri.toString());
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
+                Log.e("token",SaveSharedPreference.getLoginToken(ClassPickerActivity.this));
                 urlConnection.setRequestProperty ("token", SaveSharedPreference.getLoginToken(ClassPickerActivity.this));
-                Log.e("SOMESHIT",urlConnection.getRequestProperty("token"));
+                Log.e("token2",urlConnection.getRequestProperty("token"));
                 urlConnection.setRequestMethod("POST");
-                //urlConnection.setRequestProperty("Content-Type","application/json");
+                urlConnection.setRequestProperty("Content-Type","application/json");
                 urlConnection.setDoOutput(true);
                 urlConnection.connect();
                 JSONObject jsonArr = new JSONObject();
+                JSONArray fuckVic = new JSONArray();
                 OutputStreamWriter wr = new   OutputStreamWriter(urlConnection.getOutputStream());
-                String[] classes = {"2","3","4"};
+                List<String> myClasses = GlobalVariables.getClasses();
+                for(String shit:myClasses)
+                {
+                    fuckVic.put(shit);
+                }
                 try{
-                    jsonArr.put("classes",classes);
+                    jsonArr.put("classes",fuckVic);
+                    Log.e("classes",jsonArr.toString());
                 }
                 catch(Exception e){
                     e.printStackTrace();
