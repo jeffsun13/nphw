@@ -1,6 +1,7 @@
 package app.com.example.victoriajuan.nphshomework;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ public class CustomAdapter extends ArrayAdapter<String> {
         TextView txtTitle = (TextView) rowView.findViewById(R.id.list_item_forecast_textview);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
         TextView extratxt = (TextView) rowView.findViewById(R.id.list_item_forecast_textview2);
+
 
         txtTitle.setText(itemTitle.get(position));
         imageView.setImageResource(imgid.get(position));

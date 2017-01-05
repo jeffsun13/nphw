@@ -379,8 +379,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     return null;
                 }
                 tokenJsonStr = buffer.toString();
-                SaveSharedPreference.setLoginToken(LoginActivity.this,tokenJsonStr);
                 Log.e("thelogintoken",SaveSharedPreference.getLoginToken(LoginActivity.this));
+                SaveSharedPreference.setLoginToken(LoginActivity.this,tokenJsonStr);
+
                 return true;
 
             } catch (IOException e) {

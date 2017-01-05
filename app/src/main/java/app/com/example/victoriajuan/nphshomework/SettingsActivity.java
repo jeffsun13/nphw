@@ -29,7 +29,7 @@ public class SettingsActivity extends PreferenceActivity
     @Override
     public boolean onPreferenceChange(Preference preference, Object value) {
 
-        SaveSharedPreference.setNotifications(SettingsActivity.this, preference.getKey(), value.toString());
+        //SaveSharedPreference.setNotifications(SettingsActivity.this, preference.getKey(), value.toString());
 
         return true;
     }

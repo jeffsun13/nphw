@@ -6,11 +6,14 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import java.util.Calendar;
 
@@ -90,8 +93,8 @@ public class ClassActivity extends AppCompatActivity {
     public void onResume()
     {
         super.onResume();
-        setTitle(Integer.toString(GlobalVariables.getMonth()+1)+"/"+
-                Integer.toString(GlobalVariables.getDay())+"/"+
+        setTitle("Assignments Due " + Integer.toString(GlobalVariables.getMonth()+1)+"/"+
+                Integer.toString(GlobalVariables.getDay()+1)+"/"+
                 Integer.toString(GlobalVariables.getYear()));
     }
 

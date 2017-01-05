@@ -201,9 +201,7 @@ public class ClassPickerActivity extends AppCompatActivity {
             DataOutputStream printout;
             DataInputStream input;
             try {
-                // Construct the URL for the OpenWeatherMap query
-                // Possible parameters are available at OWM's forecast API page, at
-                // http://openweathermap.org/API#forecast
+
                 final String FORECAST_BASE_URL = "http://nphw.herokuapp.com/api/add-class";
                 Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
                         .build();
@@ -211,9 +209,9 @@ public class ClassPickerActivity extends AppCompatActivity {
                 URL url = new URL(builtUri.toString());
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
-                Log.e("token",SaveSharedPreference.getLoginToken(ClassPickerActivity.this));
+                //Log.e("token",SaveSharedPreference.getLoginToken(ClassPickerActivity.this));
                 urlConnection.setRequestProperty ("token", SaveSharedPreference.getLoginToken(ClassPickerActivity.this));
-                Log.e("token2",urlConnection.getRequestProperty("token"));
+                //Log.e("token2",urlConnection.getRequestProperty("token"));
                 urlConnection.setRequestMethod("POST");
                 urlConnection.setRequestProperty("Content-Type","application/json");
                 urlConnection.setDoOutput(true);

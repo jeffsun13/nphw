@@ -57,9 +57,9 @@ public class ClassFragment extends Fragment {
             "English",
             "Math",
             "History",
-            "English",
-            "Math",
-            "History"
+            "Science",
+            "Spanish",
+            "Photography"
     };
 
 
@@ -237,6 +237,7 @@ public class ClassFragment extends Fragment {
             final String OWM_TEACHER = "teacher";
             final String OWM_SUBJECT = "subject";
 
+
             JSONArray weatherArray = new JSONArray(forecastJsonStr);
 
             String[] resultStrs = new String[6];
@@ -279,7 +280,7 @@ public class ClassFragment extends Fragment {
                 // Construct the URL for the OpenWeatherMap query
                 // Possible parameters are available at OWM's forecast API page, at
                 // http://openweathermap.org/API#forecast
-                final String FORECAST_BASE_URL = "http://nphw.herokuapp.com/api/all-classes";
+                final String FORECAST_BASE_URL = "http://nphw.herokuapp.com/api/own-classes";
 
                 Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
                         .build();
@@ -289,6 +290,7 @@ public class ClassFragment extends Fragment {
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
+                urlConnection.setRequestProperty ("token", SaveSharedPreference.getLoginToken(getActivity()));
                 urlConnection.connect();
 
                 // Read the input stream into a String

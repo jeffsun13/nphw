@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class SaveSharedPreference {
     static final String PREF_USER_NAME = "username";
@@ -47,6 +48,7 @@ public class SaveSharedPreference {
     }
 
     public static String getLoginToken(Context ctx) {
+        Log.e("SSPToken",getSharedPreferences(ctx).getString(LOGIN_TOKEN, ""));
         return getSharedPreferences(ctx).getString(LOGIN_TOKEN, "");
     }
 

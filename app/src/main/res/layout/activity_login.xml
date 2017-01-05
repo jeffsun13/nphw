@@ -87,8 +87,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/action_sign_in"
-                android:backgroundTint="@color/colorAccent"
-                android:textColor="@color/colorWhite"
+                android:backgroundTint="@color/colorPrimary"
+                android:textColor="@color/colorAccent"
                 android:textStyle="bold" />
 
             <Button
@@ -99,7 +99,7 @@
                 android:layout_marginTop="4dp"
                 android:text="@string/action_forgot"
                 android:background="?android:attr/selectableItemBackground"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/colorPrimary"
                 android:textStyle="bold" />
 
             <Button
@@ -111,7 +111,7 @@
                 android:layout_width="202dp"
                 android:layout_height="wrap_content"
                 android:text="@string/action_register"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/colorPrimary"
                 android:textStyle="bold" />
 
         </LinearLayout>
