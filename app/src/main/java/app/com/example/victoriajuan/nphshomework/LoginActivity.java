@@ -79,12 +79,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private GoogleApiClient client;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         // Set up the login form.
@@ -379,10 +375,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     return null;
                 }
                 tokenJsonStr = buffer.toString();
-                Log.e("thelogintoken",SaveSharedPreference.getLoginToken(LoginActivity.this));
+                Log.e("Buffer",tokenJsonStr);
+                if(!tokenJsonStr.equals("false")){
                 SaveSharedPreference.setLoginToken(LoginActivity.this,tokenJsonStr);
+                    return true;}
 
-                return true;
+                return false;
 
             } catch (IOException e) {
                 Log.e("PlaceholderFragment", "Error ", e);
@@ -406,6 +404,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected void onPostExecute(final Boolean success) {
+            Log.e("SUccess", success.toString());
             mAuthTask = null;
             showProgress(false);
 

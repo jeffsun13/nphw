@@ -93,9 +93,10 @@ public class ClassActivity extends AppCompatActivity {
     public void onResume()
     {
         super.onResume();
-        setTitle("Assignments Due " + Integer.toString(GlobalVariables.getMonth()+1)+"/"+
+        /*setTitle("Assignments Due " + Integer.toString(GlobalVariables.getMonth()+1)+"/"+
                 Integer.toString(GlobalVariables.getDay()+1)+"/"+
-                Integer.toString(GlobalVariables.getYear()));
+                Integer.toString(GlobalVariables.getYear()));*/
+        setTitle("Inbox");
     }
 
     @Override
