@@ -64,12 +64,12 @@ public class ClassFragment extends Fragment {
 
 
     private Integer[] imgid={
-            R.mipmap.paper,
+            R.drawable.ic_description_black_24dp,
             R.mipmap.compass,
             R.mipmap.pencil,
             R.mipmap.glasses,
             R.mipmap.ruler,
-            R.mipmap.atom
+            R.drawable.ic_camera_alt_black_24dp
     };
 
     public ClassFragment() {
@@ -181,6 +181,10 @@ public class ClassFragment extends Fragment {
         adapter = new CustomAdapter(getActivity(), classTitles, weekHomework, hwIcons);
         listView = (ListView) rootView.findViewById(R.id.listview_classes);
 
+        //If version>lollipop, allows nested scrolling view to close collapsingtoolbar from fragment
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            listView.setNestedScrollingEnabled(true);
+        }
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

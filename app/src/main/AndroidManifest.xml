@@ -45,6 +45,7 @@
         <activity
             android:name=".ClassPickerActivity"
             android:label="@string/title_activity_class_picker"
+            android:parentActivityName="app.com.example.victoriajuan.nphshomework.ClassActivity"
             android:theme="@style/AppTheme"></activity>
     </application>
 

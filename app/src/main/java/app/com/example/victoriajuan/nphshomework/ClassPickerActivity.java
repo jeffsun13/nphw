@@ -90,6 +90,8 @@ public class ClassPickerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_class_picker);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         mProgressView = findViewById(R.id.picker_progress);
         mLoginFormView = findViewById(R.id.listview_classes2);
         List<String> classTitles;
