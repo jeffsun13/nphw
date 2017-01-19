@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import java.util.Calendar;
 
@@ -41,6 +42,10 @@ public class ClassActivity extends AppCompatActivity {
             showProgress(true);
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
+
+            ImageView shit = (ImageView) findViewById(R.id.expandedImage);
+            shit.setImageResource(R.mipmap.gradient);
+
 
             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
@@ -93,10 +98,10 @@ public class ClassActivity extends AppCompatActivity {
     public void onResume()
     {
         super.onResume();
-        /*setTitle("Assignments Due " + Integer.toString(GlobalVariables.getMonth()+1)+"/"+
+        setTitle("Assignments Due " + Integer.toString(GlobalVariables.getMonth()+1)+"/"+
                 Integer.toString(GlobalVariables.getDay()+1)+"/"+
-                Integer.toString(GlobalVariables.getYear()));*/
-        setTitle("Inbox");
+                Integer.toString(GlobalVariables.getYear()));
+
     }
 
     @Override
