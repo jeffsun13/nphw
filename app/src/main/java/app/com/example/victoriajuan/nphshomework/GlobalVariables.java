@@ -16,7 +16,7 @@ public class GlobalVariables extends Application {
     private static String CLASS_TYPE;
     private static int ICON_TYPE;
     private static String CLASS_DETAILS;
-    public static List<String> CLASSES=new ArrayList<String>();
+    public static List<String> CLASSES = new ArrayList<String>();
 
     public static int getDay() {
         return DAY;

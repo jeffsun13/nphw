@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -227,45 +226,58 @@ public class ClassFragment extends Fragment {
                     }
                 }
         );
-
     }
 
     public class FetchHomeworkClass extends AsyncTask<String, Void, String[]> {
 
-        private String[] getWeatherDataFromJson(String forecastJsonStr, int numDays)
+        //Formats what you get back from server
+        private String[] getClassesDataFromJson(String forecastJsonStr, int numDays)
                 throws JSONException {
-            // These are the names of the JSON objects that need to be extracted.
-            final String OWM_LIST = "list";
-            final String OWM_VALUE = "value";
-            final String OWM_NAME = "name";
-            final String OWM_TEACHER = "teacher";
-            final String OWM_SUBJECT = "subject";
 
+            JSONObject weatherObject = new JSONObject(forecastJsonStr);
 
-            JSONArray weatherArray = new JSONArray(forecastJsonStr);
+            String thisShit = weatherObject.toString();
 
-            String[] resultStrs = new String[6];
+            int thisLoc = thisShit.indexOf("classes");
 
-            for(int i = 0; i < weatherArray.length(); i++) {
-                // For now, using the format "Day, description, hi/low"
-                String name;
-                String teacher;
+            ArrayList<String> classes = new ArrayList<String>();
 
-                // Get the JSON object representing the day
-                JSONObject dayForecast = weatherArray.getJSONObject(i);
+            thisShit = thisShit.substring(thisLoc+9);
 
-                // description is in a child array called "weather", which is 1 element long.
-                JSONObject weatherObject = dayForecast.getJSONObject(OWM_VALUE);
-                name = weatherObject.getString(OWM_NAME);
-                teacher=weatherObject.getString(OWM_TEACHER);
-
-                resultStrs[i] = name+"-"+teacher;
+            for(int rep = 0;rep<thisShit.length()-4;rep+=4) {
+                classes.add(thisShit.substring(rep+2,rep+3));
             }
+
+            String[] finProduct = new String[classes.size()];
+
+            return classes.toArray(finProduct);
+
+        }
+
+        private ArrayList<String> getHomeworkDataFromJson(String forecastJsonStr, int numDays)
+                throws JSONException {
+
+            // These are the names of the JSON objects that need to be extracted.
+            final String OWM_CLASS = "className";
+            final String OWM_SUBJECT = "assignment";
+
+            ArrayList<String> resultStrs = new ArrayList<String>();
+
+            JSONObject weatherArray = new JSONObject(forecastJsonStr);
+
+            String className;
+            String assignment;
+
+            className = weatherArray.getString(OWM_CLASS);
+            assignment = weatherArray.getString(OWM_SUBJECT);
+
+            resultStrs.add(className + "-" + assignment);
 
             return resultStrs;
 
         }
 
+        //Gets back from server
         @Override
         protected String[] doInBackground(String... params) {
             // These two need to be declared outside the try/catch
@@ -275,7 +287,7 @@ public class ClassFragment extends Fragment {
 
             // Will contain the raw JSON response as a string.
             String forecastJsonStr = null;
-
+            String forecastJsonStr2 = null;
             String format = "json";
             String units = "metric";
             int numDays = 7;
@@ -319,6 +331,83 @@ public class ClassFragment extends Fragment {
                     return null;
                 }
                 forecastJsonStr = buffer.toString();
+            } catch (IOException e) {
+                Log.e("PlaceholderFragment", "Error ", e);
+                // If the code didn't successfully get the weather data, there's no point in attempting
+                // to parse it.
+                return null;
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("PlaceholderFragment", "Error closing stream", e);
+                    }
+                }
+            }
+
+            try {
+                String[] strs = getClassesDataFromJson(forecastJsonStr, numDays);
+                for(int rep = 0;rep < strs.length; rep++) {
+                    GlobalVariables.addClass(strs[rep]);
+                }
+            } catch (JSONException e) {
+                Log.e("CLASSFRAGMENT", e.getMessage(), e);
+                e.printStackTrace();
+            }
+
+            List<String> arr = GlobalVariables.getClasses();
+
+            for (int temp = 0; temp < arr.size(); temp++)
+            {
+
+            }
+
+            try {
+                // Construct the URL for the OpenWeatherMap query
+                // Possible parameters are available at OWM's forecast API page, at
+                // http://openweathermap.org/API#forecast
+                final String FORECAST_BASE_URL = "http://nphw.herokuapp.com/api/get-homework?";
+
+                Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
+                        .appendQueryParameter("classID","1")
+                        .appendQueryParameter("dateAssigned","2017-01-01")
+                        .build();
+
+                URL url = new URL(builtUri.toString());
+
+                // Create the request to OpenWeatherMap, and open the connection
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.setRequestProperty ("token", SaveSharedPreference.getLoginToken(getActivity()));
+                urlConnection.connect();
+
+                // Read the input stream into a String
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    // Nothing to do.
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                    // But it does make debugging a *lot* easier if you print out the completed
+                    // buffer for debugging.
+                    buffer.append(line + "\n");
+                }
+
+                if (buffer.length() == 0) {
+                    // Stream was empty.  No point in parsing.
+                    return null;
+                }
+                forecastJsonStr2 = buffer.toString();
+                Log.e("Class Fragment", forecastJsonStr2);
 
             } catch (IOException e) {
                 Log.e("PlaceholderFragment", "Error ", e);
@@ -339,15 +428,18 @@ public class ClassFragment extends Fragment {
             }
 
             try {
-                return getWeatherDataFromJson(forecastJsonStr, numDays);
+                ArrayList<String> str = getHomeworkDataFromJson(forecastJsonStr2, numDays);
+                return str.toArray(new String[str.size()]);
             } catch (JSONException e) {
                 Log.e("CLASSFRAGMENT", e.getMessage(), e);
                 e.printStackTrace();
             }
 
+
             return null;
         }
 
+        //Finishes the asynctask
         @Override
         protected void onPostExecute(String[] result) {
             if (result != null) {

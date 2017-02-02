@@ -32,15 +32,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static app.com.example.victoriajuan.nphshomework.SaveSharedPreference.LOGIN_TOKEN;
 
 public class ClassPickerActivity extends AppCompatActivity {
 
@@ -293,7 +289,7 @@ public class ClassPickerActivity extends AppCompatActivity {
                 throws JSONException {
             // These are the names of the JSON objects that need to be extracted.
             final String OWM_LIST = "list";
-            final String OWM_VALUE = "value";
+            final String OWM_ID = "id";
             final String OWM_NAME = "name";
             final String OWM_TEACHER = "teacher";
             final String OWM_SUBJECT = "subject";
@@ -306,14 +302,22 @@ public class ClassPickerActivity extends AppCompatActivity {
                 // For now, using the format "Day, description, hi/low"
                 String name;
                 String teacher;
+                String id;
+                String subject;
 
                 // Get the JSON object representing the day
                 JSONObject dayForecast = weatherArray.getJSONObject(i);
 
                 // description is in a child array called "weather", which is 1 element long.
-                JSONObject weatherObject = dayForecast.getJSONObject(OWM_VALUE);
-                name = weatherObject.getString(OWM_NAME);
-                teacher=weatherObject.getString(OWM_TEACHER);
+                JSONObject ID = dayForecast.getJSONObject(OWM_ID);
+                JSONObject NAME = dayForecast.getJSONObject(OWM_NAME);
+                JSONObject TEACHER = dayForecast.getJSONObject(OWM_TEACHER);
+                JSONObject SUBJECT = dayForecast.getJSONObject(OWM_SUBJECT);
+
+                id = ID.getString(OWM_ID);
+                name = NAME.getString(OWM_NAME);
+                teacher=TEACHER.getString(OWM_TEACHER);
+                subject=SUBJECT.getString(OWM_SUBJECT);
 
                 resultStrs[i] = name+"-"+teacher;
             }
