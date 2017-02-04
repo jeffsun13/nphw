@@ -254,7 +254,7 @@ public class ClassFragment extends Fragment {
 
         }
 
-        private ArrayList<String> getHomeworkDataFromJson(String forecastJsonStr, int numDays)
+        private ArrayList<String> getHomeworkDataFromJson(ArrayList<String> forecastJsonStr, int numDays)
                 throws JSONException {
 
             // These are the names of the JSON objects that need to be extracted.
@@ -263,15 +263,18 @@ public class ClassFragment extends Fragment {
 
             ArrayList<String> resultStrs = new ArrayList<String>();
 
-            JSONObject weatherArray = new JSONObject(forecastJsonStr);
+            for (int rep = 0; rep < forecastJsonStr.size(); rep++)
+            {
+                JSONObject weatherArray = new JSONObject(forecastJsonStr.get(rep));
 
-            String className;
-            String assignment;
+                String className;
+                String assignment;
 
-            className = weatherArray.getString(OWM_CLASS);
-            assignment = weatherArray.getString(OWM_SUBJECT);
+                className = weatherArray.getString(OWM_CLASS);
+                assignment = weatherArray.getString(OWM_SUBJECT);
 
-            resultStrs.add(className + "-" + assignment);
+                resultStrs.add(className + "-" + assignment);
+            }
 
             return resultStrs;
 
@@ -287,7 +290,7 @@ public class ClassFragment extends Fragment {
 
             // Will contain the raw JSON response as a string.
             String forecastJsonStr = null;
-            String forecastJsonStr2 = null;
+            ArrayList<String> forecastJsonStr2 = new ArrayList<String>();
             String format = "json";
             String units = "metric";
             int numDays = 7;
@@ -350,6 +353,7 @@ public class ClassFragment extends Fragment {
             }
 
             try {
+                GlobalVariables.clearList();
                 String[] strs = getClassesDataFromJson(forecastJsonStr, numDays);
                 for(int rep = 0;rep < strs.length; rep++) {
                     GlobalVariables.addClass(strs[rep]);
@@ -361,68 +365,67 @@ public class ClassFragment extends Fragment {
 
             List<String> arr = GlobalVariables.getClasses();
 
-            for (int temp = 0; temp < arr.size(); temp++)
+            //- 3 NEEDS TO BE FIXED; check if number before inserting?
+            for (int temp = 0; temp < arr.size() - 3; temp++)
             {
+                String classID = arr.get(temp);
+                Log.e("Class Fragment", classID);
 
-            }
+                try {
+                    final String FORECAST_BASE_URL = "http://nphw.herokuapp.com/api/get-homework?";
 
-            try {
-                // Construct the URL for the OpenWeatherMap query
-                // Possible parameters are available at OWM's forecast API page, at
-                // http://openweathermap.org/API#forecast
-                final String FORECAST_BASE_URL = "http://nphw.herokuapp.com/api/get-homework?";
+                    Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
+                            .appendQueryParameter("classID", classID)
+                            .appendQueryParameter("dateAssigned","2017-01-01")
+                            .build();
 
-                Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
-                        .appendQueryParameter("classID","1")
-                        .appendQueryParameter("dateAssigned","2017-01-01")
-                        .build();
+                    URL url = new URL(builtUri.toString());
 
-                URL url = new URL(builtUri.toString());
+                    // Create the request to OpenWeatherMap, and open the connection
+                    urlConnection = (HttpURLConnection) url.openConnection();
+                    urlConnection.setRequestMethod("GET");
+                    urlConnection.setRequestProperty ("token", SaveSharedPreference.getLoginToken(getActivity()));
+                    urlConnection.connect();
 
-                // Create the request to OpenWeatherMap, and open the connection
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.setRequestProperty ("token", SaveSharedPreference.getLoginToken(getActivity()));
-                urlConnection.connect();
+                    // Read the input stream into a String
+                    InputStream inputStream = urlConnection.getInputStream();
+                    StringBuffer buffer = new StringBuffer();
+                    if (inputStream == null) {
+                        // Nothing to do.
+                        return null;
+                    }
+                    reader = new BufferedReader(new InputStreamReader(inputStream));
 
-                // Read the input stream into a String
-                InputStream inputStream = urlConnection.getInputStream();
-                StringBuffer buffer = new StringBuffer();
-                if (inputStream == null) {
-                    // Nothing to do.
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                        // But it does make debugging a *lot* easier if you print out the completed
+                        // buffer for debugging.
+                        buffer.append(line + "\n");
+                    }
+
+                    if (buffer.length() == 0) {
+                        // Stream was empty.  No point in parsing.
+                        return null;
+                    }
+
+                    forecastJsonStr2.add(buffer.toString());
+
+                } catch (IOException e) {
+                    Log.e("PlaceholderFragment", "Error ", e);
+                    // If the code didn't successfully get the weather data, there's no point in attempting
+                    // to parse it.
                     return null;
-                }
-                reader = new BufferedReader(new InputStreamReader(inputStream));
-
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                    // But it does make debugging a *lot* easier if you print out the completed
-                    // buffer for debugging.
-                    buffer.append(line + "\n");
-                }
-
-                if (buffer.length() == 0) {
-                    // Stream was empty.  No point in parsing.
-                    return null;
-                }
-                forecastJsonStr2 = buffer.toString();
-                Log.e("Class Fragment", forecastJsonStr2);
-
-            } catch (IOException e) {
-                Log.e("PlaceholderFragment", "Error ", e);
-                // If the code didn't successfully get the weather data, there's no point in attempting
-                // to parse it.
-                return null;
-            } finally {
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (final IOException e) {
-                        Log.e("PlaceholderFragment", "Error closing stream", e);
+                } finally {
+                    if (urlConnection != null) {
+                        urlConnection.disconnect();
+                    }
+                    if (reader != null) {
+                        try {
+                            reader.close();
+                        } catch (final IOException e) {
+                            Log.e("PlaceholderFragment", "Error closing stream", e);
+                        }
                     }
                 }
             }

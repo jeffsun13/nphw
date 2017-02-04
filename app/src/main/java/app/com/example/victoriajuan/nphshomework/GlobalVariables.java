@@ -36,6 +36,8 @@ public class GlobalVariables extends Application {
 
     public static String getClassDetails() { return CLASS_DETAILS; }
 
+    public static void clearList() { CLASSES.clear(); }
+
     public static List<String> getClasses() {return CLASSES;}
 
     public static void addClass(String theclass){

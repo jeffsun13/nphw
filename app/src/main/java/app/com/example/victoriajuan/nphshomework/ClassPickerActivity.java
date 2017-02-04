@@ -288,7 +288,6 @@ public class ClassPickerActivity extends AppCompatActivity {
         private String[] getWeatherDataFromJson(String forecastJsonStr, int numDays)
                 throws JSONException {
             // These are the names of the JSON objects that need to be extracted.
-            final String OWM_LIST = "list";
             final String OWM_ID = "id";
             final String OWM_NAME = "name";
             final String OWM_TEACHER = "teacher";
