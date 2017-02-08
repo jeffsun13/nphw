@@ -317,7 +317,7 @@ public class ClassPickerActivity extends AppCompatActivity {
                 name = NAME.getString(OWM_NAME);
                 teacher=TEACHER.getString(OWM_TEACHER);
                 subject=SUBJECT.getString(OWM_SUBJECT);
-
+                Log.e("THENAMES",name);
                 resultStrs[i] = name+"-"+teacher;
             }
 
