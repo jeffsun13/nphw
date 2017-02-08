@@ -16,6 +16,7 @@ public class GlobalVariables extends Application {
     private static String CLASS_TYPE;
     private static int ICON_TYPE;
     private static String CLASS_DETAILS;
+    private static List<String> CLASSNAMES = new ArrayList<String>();
     public static List<String> CLASSES = new ArrayList<String>();
 
     public static int getDay() {
@@ -43,6 +44,14 @@ public class GlobalVariables extends Application {
     public static void addClass(String theclass){
         CLASSES.add(theclass);
     }
+
+    public static List<String> getClassNames() {return CLASSNAMES;}
+
+    public static void addClassNames(String theclass){
+        CLASSNAMES.add(theclass);
+    }
+
+
 
     public static void setDate(int day, int month, int year) {
         DAY = day;

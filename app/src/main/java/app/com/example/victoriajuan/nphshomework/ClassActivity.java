@@ -43,10 +43,6 @@ public class ClassActivity extends AppCompatActivity {
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
 
-            ImageView shit = (ImageView) findViewById(R.id.expandedImage);
-            shit.setImageResource(R.mipmap.gradient);
-
-
             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override

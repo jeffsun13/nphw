@@ -272,6 +272,8 @@ public class ClassFragment extends Fragment {
 
                 className = weatherArray.getString(OWM_CLASS);
                 assignment = weatherArray.getString(OWM_SUBJECT);
+                Log.e("SHITSHITSHIT",className);
+                GlobalVariables.addClassNames(className);
 
                 resultStrs.add(className + "-" + assignment);
             }
@@ -364,12 +366,12 @@ public class ClassFragment extends Fragment {
             }
 
             List<String> arr = GlobalVariables.getClasses();
+            Log.e("HE:OOOO", arr.toString());
 
             //- 3 NEEDS TO BE FIXED; check if number before inserting?
             for (int temp = 0; temp < arr.size() - 3; temp++)
             {
                 String classID = arr.get(temp);
-                Log.e("Class Fragment", classID);
 
                 try {
                     final String FORECAST_BASE_URL = "http://nphw.herokuapp.com/api/get-homework?";
