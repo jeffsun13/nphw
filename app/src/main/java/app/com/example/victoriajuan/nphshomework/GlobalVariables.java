@@ -45,12 +45,24 @@ public class GlobalVariables extends Application {
         CLASSES.add(theclass);
     }
 
+    public static void removeClass(String theclass){
+        CLASSES.remove(theclass);
+    }
+
     public static List<String> getClassNames() {return CLASSNAMES;}
 
     public static void addClassNames(String theclass){
         CLASSNAMES.add(theclass);
     }
 
+    public static boolean checkClass(String classe) {
+        for(String aClass:CLASSES) {
+            if (Integer.parseInt(classe)==Integer.parseInt(aClass)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 
     public static void setDate(int day, int month, int year) {

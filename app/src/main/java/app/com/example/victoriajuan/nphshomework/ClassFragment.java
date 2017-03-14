@@ -272,7 +272,6 @@ public class ClassFragment extends Fragment {
 
                 className = weatherArray.getString(OWM_CLASS);
                 assignment = weatherArray.getString(OWM_SUBJECT);
-                Log.e("SHITSHITSHIT",className);
                 GlobalVariables.addClassNames(className);
 
                 resultStrs.add(className + "-" + assignment);
@@ -357,19 +356,34 @@ public class ClassFragment extends Fragment {
             try {
                 GlobalVariables.clearList();
                 String[] strs = getClassesDataFromJson(forecastJsonStr, numDays);
-                for(int rep = 0;rep < strs.length; rep++) {
-                    GlobalVariables.addClass(strs[rep]);
+                String[] arr = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+                for(int rep = 0; rep < strs.length; rep++) {
+                    String numStr = strs[rep];
+                    boolean isANumber = false;
+                    for (int x = 0; x < 9; x++)
+                    {
+                        if (numStr.equals(arr[x]))
+                        {
+                            isANumber = true;
+                            x = 10;
+                        }
+                    }
+                    if(isANumber) {
+                    GlobalVariables.addClass(strs[rep]);}
                 }
+                /*for (int rep = 0; rep < strs.length; rep++)
+                {
+                    GlobalVariables.addClass(strs[rep]);
+                }*/
             } catch (JSONException e) {
                 Log.e("CLASSFRAGMENT", e.getMessage(), e);
                 e.printStackTrace();
             }
 
             List<String> arr = GlobalVariables.getClasses();
-            Log.e("HE:OOOO", arr.toString());
 
-            //- 3 NEEDS TO BE FIXED; check if number before inserting?
-            for (int temp = 0; temp < arr.size() - 3; temp++)
+
+            for (int temp = 0; temp < arr.size(); temp++)
             {
                 String classID = arr.get(temp);
 

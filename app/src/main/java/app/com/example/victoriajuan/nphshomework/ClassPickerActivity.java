@@ -103,13 +103,15 @@ public class ClassPickerActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 final String forecast = adapter.getItem(i);
-                new AlertDialog.Builder(ClassPickerActivity.this)
+                // If the class is NOT in the globalvariables class list
+                if(!GlobalVariables.checkClass(myMap.get(forecast))){
+                    new AlertDialog.Builder(ClassPickerActivity.this)
                         .setTitle("Enroll in Class?")
                         .setMessage("Would you like to add this class to your schedule?")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 //Log.e("earlytoken",SaveSharedPreference.getLoginToken(ClassPickerActivity.this));
-                                mAuthTask = new ClassPickerActivity.AddClassTask(myMap.get(forecast));
+                                mAuthTask = new ClassPickerActivity.AddClassTask(myMap.get(forecast),false);
                                 mAuthTask.execute();
                             }
                         })
@@ -120,6 +122,27 @@ public class ClassPickerActivity extends AppCompatActivity {
                         })
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .show();
+                }
+                else {
+                    new AlertDialog.Builder(ClassPickerActivity.this)
+                            .setTitle("Unenroll in Class?")
+                            .setMessage("Would you like to remove this class from your schedule?")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //Log.e("earlytoken",SaveSharedPreference.getLoginToken(ClassPickerActivity.this));
+                                    mAuthTask = new ClassPickerActivity.AddClassTask(myMap.get(forecast),true);
+                                    mAuthTask.execute();
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // do nothing
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
+
             }
         });
     }
@@ -186,8 +209,10 @@ public class ClassPickerActivity extends AppCompatActivity {
 
     public class AddClassTask extends AsyncTask<Void, Void, Boolean> {
 
-        AddClassTask(String forecast) {
-           GlobalVariables.addClass(forecast);
+        AddClassTask(String forecast,boolean remove) {
+            if(remove){GlobalVariables.removeClass(forecast);}
+            else{
+            GlobalVariables.addClass(forecast);}
         }
 
 
@@ -296,7 +321,7 @@ public class ClassPickerActivity extends AppCompatActivity {
             JSONArray weatherArray = new JSONArray(forecastJsonStr);
 
             String[] resultStrs = new String[6];
-
+            Log.e("PENIS",forecastJsonStr);
             for(int i = 0; i < weatherArray.length(); i++) {
                 // For now, using the format "Day, description, hi/low"
                 String name;
@@ -308,17 +333,17 @@ public class ClassPickerActivity extends AppCompatActivity {
                 JSONObject dayForecast = weatherArray.getJSONObject(i);
 
                 // description is in a child array called "weather", which is 1 element long.
-                JSONObject ID = dayForecast.getJSONObject(OWM_ID);
-                JSONObject NAME = dayForecast.getJSONObject(OWM_NAME);
-                JSONObject TEACHER = dayForecast.getJSONObject(OWM_TEACHER);
-                JSONObject SUBJECT = dayForecast.getJSONObject(OWM_SUBJECT);
+                String ID = dayForecast.getString(OWM_ID);
+                String NAME = dayForecast.getString(OWM_NAME);
+                String TEACHER = dayForecast.getString(OWM_TEACHER);
+                String SUBJECT = dayForecast.getString(OWM_SUBJECT);
 
-                id = ID.getString(OWM_ID);
-                name = NAME.getString(OWM_NAME);
-                teacher=TEACHER.getString(OWM_TEACHER);
-                subject=SUBJECT.getString(OWM_SUBJECT);
-                Log.e("THENAMES",name);
-                resultStrs[i] = name+"-"+teacher;
+                //id = ID.getString(OWM_ID);
+                //name = NAME.getString(OWM_NAME);
+                //teacher=TEACHER.getString(OWM_TEACHER);
+                //subject=SUBJECT.getString(OWM_SUBJECT);
+                Log.e("THENAMES",TEACHER);
+                resultStrs[i] = NAME+"-"+TEACHER;
             }
 
             return resultStrs;
