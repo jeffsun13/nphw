@@ -56,7 +56,7 @@ public class GlobalVariables extends Application {
     }
 
     public static boolean checkClass(String classe) {
-        for(String aClass:CLASSES) {
+        for(String aClass : CLASSES) {
             if (Integer.parseInt(classe)==Integer.parseInt(aClass)) {
                 return true;
             }

@@ -70,12 +70,12 @@ public class ClassPickerActivity extends AppCompatActivity {
     static
     {
         myMap = new HashMap<String, String>();
-        myMap.put("IB Chemistry Year 2", "1");
-        myMap.put("IB Math HL", "2");
-        myMap.put("Honors Independent CS", "3");
-        myMap.put("IB 20th Century", "4");
-        myMap.put("IB English Year 2", "5");
-        myMap.put("Theory of Knowledge", "6");
+        myMap.put("IB Chemistry Year 2", "0");
+        myMap.put("IB Math HL", "1");
+        myMap.put("Honors Independent CS", "2");
+        myMap.put("IB 20th Century", "3");
+        myMap.put("IB English Year 2", "4");
+        myMap.put("Theory of Knowledge", "5");
     }
 
 
@@ -110,7 +110,7 @@ public class ClassPickerActivity extends AppCompatActivity {
                         .setMessage("Would you like to add this class to your schedule?")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                //Log.e("earlytoken",SaveSharedPreference.getLoginToken(ClassPickerActivity.this));
+                                Log.e("Forecast String", myMap.get(forecast));
                                 mAuthTask = new ClassPickerActivity.AddClassTask(myMap.get(forecast),false);
                                 mAuthTask.execute();
                             }
@@ -209,12 +209,12 @@ public class ClassPickerActivity extends AppCompatActivity {
 
     public class AddClassTask extends AsyncTask<Void, Void, Boolean> {
 
-        AddClassTask(String forecast,boolean remove) {
-            if(remove){GlobalVariables.removeClass(forecast);}
+        AddClassTask(String forecast, boolean remove) {
+            if(remove)
+            {GlobalVariables.removeClass(forecast);}
             else{
             GlobalVariables.addClass(forecast);}
         }
-
 
         @Override
         protected Boolean doInBackground(Void... params) {
