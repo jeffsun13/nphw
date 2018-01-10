@@ -16,3 +16,6 @@ Prerequisites:
 * Android version 16+ (24+ preferred)
 
 ## Screenshots
+### Login Page
+<img src="https://github.com/vickyjjj/NPHSHomework/blob/master/app/src/main/res/screenshots/loginpage.png?raw=true" width="20%" height="20%">
+Login page
